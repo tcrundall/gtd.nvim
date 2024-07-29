@@ -38,4 +38,18 @@ T["is_subheading is correct"] = function()
     eq(child.lua_get([[M.is_subheading("### some heading", 4)]]), false)
 end
 
+T["find_line is correct"] = function()
+    eq(child.lua_get([[M.find_line({"line 1", "line 2", "line 3"}, "line 4")]]), vim.NIL)
+    eq(child.lua_get([[M.find_line({}, "line 1")]]), vim.NIL)
+    eq(child.lua_get([[M.find_line({"line 1", "line 2", "line 3"}, "line 2")]]), 2)
+    eq(child.lua_get([[M.find_line({"# line 1", "## line 2", "### line 3"}, "[#]+ line 2")]]), 2)
+end
+
+T["find_heading is correct"] = function()
+    eq(child.lua_get([[M.find_heading({"# line 1", "# line 2"}, "line 4")]]), vim.NIL)
+    eq(child.lua_get([[M.find_heading({}, "line 1")]]), vim.NIL)
+    eq(child.lua_get([[M.find_heading({"line 1", "### line 2", "line 3"}, "line 2")]]), 2)
+    eq(child.lua_get([[M.find_heading({"# line 1", "## line 2", "### line 3"}, "line 2")]]), 2)
+end
+
 return T

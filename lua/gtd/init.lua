@@ -30,6 +30,20 @@ M.is_subheading = function(line, level)
     return vim.startswith(line, heading_prefix)
 end
 
+M.find_line = function(contents, pattern)
+    for row_ix, row in ipairs(contents) do
+        local match = string.match(row, pattern)
+        if match ~= nil then
+            return row_ix
+        end
+    end
+    return nil
+end
+
+M.find_heading = function(contents, heading)
+    return M.find_line(contents, "[#]+ " .. heading)
+end
+
 local function add_to_next_actions(context, action)
     -- TODO: Improve by making case insensitive
     local filename = "./next-actions.md"
