@@ -44,29 +44,26 @@ M.find_heading = function(contents, heading)
     return M.find_line(contents, "[#]+ " .. heading)
 end
 
-local function add_to_next_actions(context, action)
-    -- TODO: Improve by making case insensitive
-    local filename = "./next-actions.md"
+M.get_file_contents = function(filename)
     local bufnr = vim.fn.bufadd(filename)
     vim.fn.bufload(filename)
     local contents = vim.fn.getbufline(filename, 1, 100000)
-    -- find context location
-    local pattern = "[#]+ " .. context
-    print("Looking for", pattern, "in", filename)
-    local context_exists = false
-    local context_row_ix
-    for row_ix, row in ipairs(contents) do
-        local match = string.match(row, pattern)
-        if match ~= nil then
-            print("Found", context, "at row", row_ix)
-            context_exists = true
-            context_row_ix = row_ix
-            break
-        end
+    return contents, bufnr
+end
+
+M.add_to_next_actions = function(context, action, filename)
+    -- TODO: Improve by making case insensitive
+    filename = filename or "./next-actions.md"
+    local contents, bufnr = M.get_file_contents(filename)
+
+    local context_row_ix = M.find_heading(contents, context)
+    if context_row_ix == nil then
+        -- TODO: Insert at end of file and set row_ix accordingly
+        print("Probs gonna get an error!")
+        vim.api.nvim_buf_set_lines(bufnr, -1, -1, false, { "## " .. context })
+        context_row_ix = -1
     end
-    if context_exists then
-        vim.api.nvim_buf_set_lines(bufnr, context_row_ix + 1, context_row_ix + 1, false, { action })
-    end
+    vim.api.nvim_buf_set_lines(bufnr, context_row_ix + 1, context_row_ix + 1, false, { action })
 end
 
 M.scrape_actions = function()
@@ -81,9 +78,8 @@ M.scrape_actions = function()
     -- - [ ] handle nested lists
 
     local filename = "projects/archive/amsterdam-trip.md"
-    vim.fn.bufadd(filename)
-    vim.fn.bufload(filename)
-    local contents = vim.fn.getbufline(filename, 1, 100000)
+    local contents = M.get_file_contents(filename)
+
     local heading_text_pattern = "[#]+ Organi[s|z]e"
     local organize_row_ix, heading_level
     for row_ix, row in ipairs(contents) do
