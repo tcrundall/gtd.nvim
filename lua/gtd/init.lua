@@ -25,6 +25,11 @@ M.is_action = function(line)
     return line:find("%s*- %[ %] ") == 1
 end
 
+M.is_subheading = function(line, level)
+    local heading_prefix = ("#"):rep(level + 1)
+    return vim.startswith(line, heading_prefix)
+end
+
 local function add_to_next_actions(context, action)
     -- TODO: Improve by making case insensitive
     local filename = "./next-actions.md"
@@ -48,11 +53,6 @@ local function add_to_next_actions(context, action)
     if context_exists then
         vim.api.nvim_buf_set_lines(bufnr, context_row_ix + 1, context_row_ix + 1, false, { action })
     end
-end
-
-local function is_subheading(line, level)
-    local heading_prefix = ("#"):rep(level + 1)
-    return vim.startswith(line, heading_prefix)
 end
 
 M.scrape_actions = function()
@@ -118,7 +118,7 @@ M.scrape_actions = function()
         while
             contents[target_row_ix] ~= nil
             and not M.is_action(contents[target_row_ix])
-            and not is_subheading(contents[target_row_ix], heading_level)
+            and not M.is_subheading(contents[target_row_ix], heading_level)
         do
             target_row_ix = target_row_ix + 1
             -- print("Looking at ", contents[target_row_ix])

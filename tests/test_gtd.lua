@@ -29,4 +29,13 @@ T["is_action is correct"] = function()
     eq(child.lua_get([[M.is_action("")]]), false)
 end
 
+T["is_subheading is correct"] = function()
+    eq(child.lua_get([[M.is_subheading("### some heading", 1)]]), true)
+    eq(child.lua_get([[M.is_subheading("### some heading", 2)]]), true)
+    eq(child.lua_get([[M.is_subheading("##### some heading", 2)]]), true)
+
+    eq(child.lua_get([[M.is_subheading("some heading", 2)]]), false)
+    eq(child.lua_get([[M.is_subheading("### some heading", 4)]]), false)
+end
+
 return T
