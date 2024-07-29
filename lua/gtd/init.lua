@@ -1,5 +1,3 @@
-print("Loading init!")
-
 M = {}
 
 M.TOC = function()
@@ -14,7 +12,6 @@ M.TOC = function()
         if filename ~= "_index.md" then
             local short_filename = vim.fn.fnamemodify(filename, ":r")
             local toc_entry = "- [" .. short_filename .. "](./" .. filename .. ")"
-            -- print(toc_entry)
             table.insert(toc_entries, toc_entry)
         end
     end
@@ -58,10 +55,8 @@ M.add_to_next_actions = function(context, action, filename)
 
     local context_row_ix = M.find_heading(contents, context)
     if context_row_ix == nil then
-        -- TODO: Insert at end of file and set row_ix accordingly
-        print("Probs gonna get an error!")
-        vim.api.nvim_buf_set_lines(bufnr, -1, -1, false, { "## " .. context })
-        context_row_ix = -1
+        vim.api.nvim_buf_set_lines(bufnr, -1, -1, false, { "", "## " .. context, "" })
+        context_row_ix = 1000000000
     end
     vim.api.nvim_buf_set_lines(bufnr, context_row_ix + 1, context_row_ix + 1, false, { action })
 end
@@ -136,7 +131,7 @@ M.scrape_actions = function()
         local row = contents[target_row_ix]
         if row ~= nil and M.is_action(row) then
             print("Found next action:", row)
-            add_to_next_actions(context, row)
+            M.add_to_next_actions(context, row)
         end
     end
 end

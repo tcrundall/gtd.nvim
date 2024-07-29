@@ -70,4 +70,22 @@ T["add next action to existing context"] = function()
     expect.reference_screenshot(child.get_screenshot())
 end
 
+T["add next action to non-existing context"] = function()
+    child.o.lines, child.o.columns = 15, 50
+    child.bo.readonly = false
+
+    -- Arrange
+    local context = "New Context 1"
+    local action = "- [ ] new action 1"
+    local filename = "./tests/resources/next-actions.md"
+    local bufnr = child.lua_get("vim.fn.bufadd('" .. filename .. "')")
+
+    -- Act
+    child.lua("M.add_to_next_actions(...)", { context, action, filename })
+
+    -- Assert
+    child.lua("vim.api.nvim_set_current_buf(...)", { bufnr })
+    expect.reference_screenshot(child.get_screenshot())
+end
+
 return T
