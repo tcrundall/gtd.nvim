@@ -16,7 +16,7 @@ local T = new_set({
             -- Restart child process with custom 'init.lua' script
             child.restart({ "-u", "scripts/minimal_init.lua" })
             -- Load tested plugin
-            child.lua([[M = require('gtd')]])
+            child.lua([[M = require('gtd.sync')]])
         end,
         -- This will be executed one after all tests from this set are finished
         post_once = child.stop,
