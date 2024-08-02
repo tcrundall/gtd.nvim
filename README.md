@@ -26,6 +26,7 @@ A plugin that facilitates utilizing the Getting Things Done framework in Neovim.
 
 - [ ] avoid duplicates
 - [ ] put new at bottom of list
+- [ ] use built in [lua file reading](/home/crundallt/opt/neovim/build/share/nvim/runtime/doc/luaref.txt) file:lines()
 
 ### Tidying
 
@@ -34,6 +35,7 @@ A plugin that facilitates utilizing the Getting Things Done framework in Neovim.
 
 ### Future features
 
+- [ ] feat: actually make it a plugin
 - [ ] feat: delete checked tasks
 - [ ] feat: connected actions
 - [ ] feat: template a project file
@@ -46,3 +48,4 @@ A plugin that facilitates utilizing the Getting Things Done framework in Neovim.
 
 Test are done with [mini.test](https://github.com/echasnovski/mini.test) which is part of
 [mini.nvim](https://github.com/echasnovski/mini.nvim/blob/main/README.md)
+- See [examples here](https://github.com/echasnovski/mini.nvim/blob/main/TESTING.md#test-parametrization)
