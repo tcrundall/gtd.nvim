@@ -48,15 +48,14 @@ M.ensure_tagged = function(line)
     local tag_pattern = "%[%]%([%a%d]+%)"
     local _, end_ix = line:find(tag_pattern)
 
+    if end_ix == nil then
+        return string.format("%s [](%s)", line, M.generate_random_tag())
+    end
+
     if end_ix ~= #line then
         print("Warning: apparent tag is not at end of line")
     end
-
-    if end_ix ~= nil then
-        return line
-    end
-
-    return string.format("%s [](%s)", line, M.generate_random_tag())
+    return line
 end
 
 return M
