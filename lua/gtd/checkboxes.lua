@@ -30,8 +30,8 @@ M.cycle_checkbox_format = function(current_checkbox_line, tagged)
             local new_line = current_checkbox_line:sub(1, start_ix - 1)
                 .. replacements[state]
                 .. current_checkbox_line:sub(end_ix + 1)
-            if tagged and (state == "no_box" or state == "no_anything") then
-                new_line = new_line .. " [" .. random_tags.generate_random_tag() .. "]"
+            if tagged then
+                new_line = random_tags.ensure_tagged(new_line)
             end
             return new_line
         end

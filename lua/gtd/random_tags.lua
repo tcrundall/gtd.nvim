@@ -41,4 +41,22 @@ M.generate_random_tag = function()
     return M.base10_to_base62_str(math.random(62 ^ 7, 62 ^ 8))
 end
 
+--- Append a concealed random tag, if not already present
+---@param line string
+---@return string
+M.ensure_tagged = function(line)
+    local tag_pattern = "%[%]%([%a%d]+%)"
+    local _, end_ix = line:find(tag_pattern)
+
+    if end_ix ~= #line then
+        print("Warning: apparent tag is not at end of line")
+    end
+
+    if end_ix ~= nil then
+        return line
+    end
+
+    return string.format("%s [](%s)", line, M.generate_random_tag())
+end
+
 return M

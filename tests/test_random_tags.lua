@@ -72,4 +72,35 @@ T["randomly generated tags are of length 8"] = function()
     end
 end
 
+T["lines to tag"] = new_set({
+    parametrize = {
+        { "- line 1" },
+        { "line 2" },
+    },
+})
+---@param input_line string
+T["lines to tag"]["get tagged"] = function(input_line)
+    local tag_pattern = "%[%]%([%a%d]+%)"
+
+    ---@type string
+    local output_line = child.lua_get("M.ensure_tagged('" .. input_line .. "')")
+
+    local _, end_ix = output_line:find(tag_pattern)
+    eq(end_ix, #output_line) -- ensure tag occurs and is at end of line
+end
+
+T["lines not to tag"] = new_set({
+    parametrize = {
+        { "tagged line [](asdfasdf)" },
+        { "another tagged line [](asdfasdf)" },
+        { "another tagged line [](asdfasdf) but in the middle" },
+    },
+})
+---@param input_line string
+T["lines not to tag"]["do not get tagged"] = function(input_line)
+    ---@type string
+    local output_line = child.lua_get("M.ensure_tagged('" .. input_line .. "')")
+    eq(output_line, input_line)
+end
+
 return T

@@ -40,7 +40,7 @@ T[test_name]["works with no tag"] = function(current_line, expected_line)
 end
 
 T[test_name]["works with tag"] = function(current_line, expected_line)
-    local tag_pattern = "%[[%a%d]+%]"
+    local tag_pattern = "%[%]%([%a%d]+%)"
     local tagged = "true"
     local actual_line =
         child.lua_get("M.cycle_checkbox_format('" .. current_line .. "'," .. tagged .. ")")
