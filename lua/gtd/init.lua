@@ -1,4 +1,4 @@
-M = {}
+local M = {}
 
 M.TOC = function()
     -- local target_dir = vim.fn.fnamemodify(test_filename, ":p:h")
