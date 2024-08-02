@@ -29,8 +29,8 @@ A plugin that facilitates utilizing the Getting Things Done framework in Neovim.
 
 ### Tidying
 
-- [ ] ignore undefined global in test file
-- [ ] use parametrization in tests
+- [x] ignore undefined global in test file
+- [x] use parametrization in tests
 
 ### Future features
 
@@ -43,3 +43,6 @@ A plugin that facilitates utilizing the Getting Things Done framework in Neovim.
   - [ ] jump to markdown headers in other files
 
 ## Supporting Material
+
+Test are done with [mini.test](https://github.com/echasnovski/mini.test) which is part of
+[mini.nvim](https://github.com/echasnovski/mini.nvim/blob/main/README.md)

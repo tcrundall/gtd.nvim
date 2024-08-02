@@ -1,3 +1,5 @@
+MiniTest = require("mini.test") -- only here to supress Undefined global warnings
+
 -- Define helper aliases
 local new_set = MiniTest.new_set
 local expect, eq = MiniTest.expect, MiniTest.expect.equality
@@ -21,62 +23,74 @@ local T = new_set({
     },
 })
 
-T["is_action is correct"] = function()
-    eq(child.lua_get([[M.is_action("- [ ] action")]]), true)
-    eq(child.lua_get([[M.is_action("- [ ] ")]]), true)
-    eq(child.lua_get([[M.is_action("- [ ]")]]), false)
-    eq(child.lua_get([[M.is_action("- [x] action")]]), false)
-    eq(child.lua_get([[M.is_action("")]]), false)
+T["identifying valid actions"] = new_set({
+    parametrize = {
+        { "- [ ] action", true },
+        { "- [ ] ", true },
+        { "- [ ]", false },
+        { "- [x] action", false },
+        { "", false },
+    },
+})
+T["identifying valid actions"]["works"] = function(action_str, result)
+    eq(child.lua_get("M.is_action('" .. action_str .. "')"), result)
 end
 
-T["is_subheading is correct"] = function()
-    eq(child.lua_get([[M.is_subheading("### some heading", 1)]]), true)
-    eq(child.lua_get([[M.is_subheading("### some heading", 2)]]), true)
-    eq(child.lua_get([[M.is_subheading("##### some heading", 2)]]), true)
-
-    eq(child.lua_get([[M.is_subheading("some heading", 2)]]), false)
-    eq(child.lua_get([[M.is_subheading("### some heading", 4)]]), false)
+T["identifying subheadings"] = new_set({
+    parametrize = {
+        { "### some heading", 1, true },
+        { "### some heading", 2, true },
+        { "##### some heading", 2, true },
+        { "some heading", 2, false },
+        { "### some heading", 4, false },
+    },
+})
+T["identifying subheadings"]["works"] = function(heading, current_level, expected_result)
+    eq(
+        child.lua_get("M.is_subheading('" .. heading .. "', " .. current_level .. ")"),
+        expected_result
+    )
 end
 
-T["find_line is correct"] = function()
-    eq(child.lua_get([[M.find_line({"line 1", "line 2", "line 3"}, "line 4")]]), vim.NIL)
-    eq(child.lua_get([[M.find_line({}, "line 1")]]), vim.NIL)
-    eq(child.lua_get([[M.find_line({"line 1", "line 2", "line 3"}, "line 2")]]), 2)
-    eq(child.lua_get([[M.find_line({"# line 1", "## line 2", "### line 3"}, "[#]+ line 2")]]), 2)
+T["finding line"] = new_set({
+    parametrize = {
+        { [[{ "line 1", "line 2", "line 3" }]], "line 4", vim.NIL },
+        { [[{}]], "line 1", vim.NIL },
+        { [[{ "line 1", "line 2", "line 3" }]], "line 2", 2 },
+        { [[{ "# line 1", "## line 2", "### line 3" }]], "[#]+ line 2", 2 },
+    },
+})
+T["finding line"]["works"] = function(lines, target_line, expected_result)
+    eq(child.lua_get("M.find_line(" .. lines .. ", '" .. target_line .. "')"), expected_result)
 end
 
-T["find_heading is correct"] = function()
-    eq(child.lua_get([[M.find_heading({"# line 1", "# line 2"}, "line 4")]]), vim.NIL)
-    eq(child.lua_get([[M.find_heading({}, "line 1")]]), vim.NIL)
-    eq(child.lua_get([[M.find_heading({"line 1", "### line 2", "line 3"}, "line 2")]]), 2)
-    eq(child.lua_get([[M.find_heading({"# line 1", "## line 2", "### line 3"}, "line 2")]]), 2)
+T["finding heading"] = new_set({
+    parametrize = {
+        { [[{"# line 1", "# line 2"}]], "line 4", vim.NIL },
+        { [[{}]], "line 1", vim.NIL },
+        { [[{"line 1", "### line 2", "line 3"}]], "line 2", 2 },
+        { [[{"# line 1", "## line 2", "### line 3"}]], "line 2", 2 },
+    },
+})
+T["finding heading"]["works"] = function(lines, target_heading, expected_result)
+    eq(
+        child.lua_get("M.find_heading(" .. lines .. ", '" .. target_heading .. "')"),
+        expected_result
+    )
 end
 
-T["add next action to existing context"] = function()
+T["adding to next actions"] =
+    new_set({ parametrize = {
+        { "Existing Context 1" },
+        { "New Context 1" },
+    } })
+
+T["adding to next actions"]["works"] = function(context)
     child.o.lines, child.o.columns = 15, 50
     child.bo.readonly = false
 
     -- Arrange
-    local context = "Existing Context 1"
-    local action = "- [ ] new action 1"
-    local filename = "./tests/resources/next-actions.md"
-    local bufnr = child.lua_get("vim.fn.bufadd('" .. filename .. "')")
-
-    -- Act
-    child.lua("M.add_to_next_actions(...)", { context, action, filename })
-
-    -- Assert
-    child.lua("vim.api.nvim_set_current_buf(...)", { bufnr })
-    expect.reference_screenshot(child.get_screenshot())
-end
-
-T["add next action to non-existing context"] = function()
-    child.o.lines, child.o.columns = 15, 50
-    child.bo.readonly = false
-
-    -- Arrange
-    local context = "New Context 1"
-    local action = "- [ ] new action 1"
+    local action = "- [ ] New action 1"
     local filename = "./tests/resources/next-actions.md"
     local bufnr = child.lua_get("vim.fn.bufadd('" .. filename .. "')")
 
