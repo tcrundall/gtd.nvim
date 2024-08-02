@@ -1,7 +1,8 @@
 MiniTest = require("mini.test") -- only here to supress Undefined global warnings
 
 local new_set = MiniTest.new_set
-local expect, eq = MiniTest.expect, MiniTest.expect.equality
+local expect, eq, neq = MiniTest.expect, MiniTest.expect.equality, MiniTest.expect.no_equality
+local test_name
 
 -- Create (but not start) child Neovim object
 local child = MiniTest.new_child_neovim()
@@ -18,7 +19,45 @@ local T = new_set({
     },
 })
 
-local test_name = "getting next checkbox format in cycle"
+test_name = "creating a checkbox"
+T[test_name] = new_set({
+    parametrize = {
+        { "", "- [ ] " },
+        { " ", "- [ ] " },
+        { "Some text", "- [ ] Some text" },
+        { "   Some text", "- [ ] Some text" },
+
+        { "- ", "- [ ] " },
+        { "   - ", "   - [ ] " },
+        { "- Some text", "- [ ] Some text" },
+        { "    - Some text", "    - [ ] Some text" },
+    },
+})
+T[test_name]["works with no tag"] = function(current_line, expected_line)
+    local tagged = "false"
+    eq(
+        child.lua_get("M.cycle_checkbox_format('" .. current_line .. "'," .. tagged .. ")"),
+        expected_line
+    )
+end
+
+T[test_name]["works with tag"] = function(current_line, expected_line)
+    local tag_pattern = "%[[%a%d]+%]"
+    local tagged = "true"
+    local actual_line =
+        child.lua_get("M.cycle_checkbox_format('" .. current_line .. "'," .. tagged .. ")")
+
+    -- check that pre-tag section of line matches
+    eq(actual_line:sub(1, #expected_line), expected_line)
+
+    -- check that line terminates with tag
+    local start_ix, end_ix = actual_line:find(tag_pattern)
+    neq(start_ix, nil)
+    eq(start_ix, #expected_line + 2)
+    eq(end_ix, #actual_line)
+end
+
+test_name = "getting next checkbox format in cycle"
 T[test_name] = new_set({
     parametrize = {
         { "", "- [ ] " },
@@ -43,7 +82,7 @@ T[test_name] = new_set({
     },
 })
 T[test_name]["works"] = function(current_checkbox, expected_next)
-    eq(child.lua_get("M.cycle_checkbox_format('" .. current_checkbox .. "')"), expected_next)
+    eq(child.lua_get("M.cycle_checkbox_format('" .. current_checkbox .. "', false)"), expected_next)
 end
 
 T[test_name]["integrated"] = function(current_checkbox, expected_next)
