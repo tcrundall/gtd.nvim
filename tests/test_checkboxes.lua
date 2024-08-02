@@ -1,5 +1,3 @@
-MiniTest = require("mini.test") -- only here to supress Undefined global warnings
-
 local new_set = MiniTest.new_set
 local expect, eq, neq = MiniTest.expect, MiniTest.expect.equality, MiniTest.expect.no_equality
 local test_name

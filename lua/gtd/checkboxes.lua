@@ -39,7 +39,6 @@ M.cycle_checkbox_format = function(current_checkbox_line, tagged)
 end
 
 M.cycle_checkbox = function(tagged)
-    -- TODO: Add random (unique) tag at end
     tagged = tagged or false
     local row_ix = vim.api.nvim_win_get_cursor(0)[1]
     local new_line = M.cycle_checkbox_format(vim.api.nvim_get_current_line(), tagged)

@@ -1,6 +1,3 @@
-MiniTest = require("mini.test") -- only here to supress Undefined global warnings
--- local random_tags = require("gtd.random_tags")
-
 local new_set = MiniTest.new_set
 local expect, eq = MiniTest.expect, MiniTest.expect.equality
 
