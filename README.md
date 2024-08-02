@@ -12,26 +12,34 @@ A plugin that facilitates utilizing the Getting Things Done framework in Neovim.
 
 ## Brainstorm
 
-- ignore undefined global in test file
-- use parametrization in tests
-- feat: scraping actions
-  - avoid duplicates
-  - put new at bottom of list
-- feat: connected actions
-  - checking action in Next Actions list completes in project
-  - checking action in project completes in Next Actions list
-  - unique tag after action
-  - dedicated "gtd" action for "checking"
-  - some way to sync: while scraping, if action checked anywhere, check everywhere
-- feat: delete checked tasks
-- feat: template a project file
-- feat: configure root directory
-- feat: add table methods
-- feat: include link following
-  - jump to markdown headers in other files
-
 ## Organize
 
+### Connect actions
+
+- [ ] unique tag after action
+- [ ] checking action in Next Actions list completes in project
+- [ ] checking action in project completes in Next Actions list
+- [ ] dedicated "gtd" action for "checking"
+- [ ] some way to sync: while scraping, if action checked anywhere, check everywhere
+
 ### Scraping actions
+
+- [ ] avoid duplicates
+- [ ] put new at bottom of list
+
+### Tidying
+
+- [ ] ignore undefined global in test file
+- [ ] use parametrization in tests
+
+### Future features
+
+- [ ] feat: delete checked tasks
+- [ ] feat: connected actions
+- [ ] feat: template a project file
+- [ ] feat: configure root directory
+- [ ] feat: add table methods
+- [ ] feat: include link following
+  - [ ] jump to markdown headers in other files
 
 ## Supporting Material
