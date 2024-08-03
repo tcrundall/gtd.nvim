@@ -38,6 +38,12 @@ T["if action is tagged as targeted"]["does not gain tag when tagged"] = function
     local result_line = child.lua_get("M.tag_action_as_targeted(...)", { action_line })
     eq(result_line, action_line)
 end
+T["if action is tagged as targeted"]["it loses tag when untagged"] = function(action_line)
+    local target_pattern = "%[◎%]"
+    local result_line = child.lua_get("M.untag_action_as_targeted(...)", { action_line })
+    local start_ix, _ = result_line:find(target_pattern)
+    eq(start_ix, nil)
+end
 
 T["if action is not tagged as targeted"] = new_set({
     parametrize = {
@@ -56,6 +62,10 @@ T["if action is not tagged as targeted"]["gains tag when tagged"] = function(act
     local start_ix, end_ix = result_line:find(target_pattern)
     neq(start_ix, nil)
     eq(end_ix, #result_line)
+end
+T["if action is not tagged as targeted"]["it is unchanged when untagged"] = function(action_line)
+    local result_line = child.lua_get("M.untag_action_as_targeted(...)", { action_line })
+    eq(result_line, action_line)
 end
 
 return T
