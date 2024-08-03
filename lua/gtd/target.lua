@@ -8,4 +8,14 @@ M.is_action_tagged_as_targeted = function(line)
     return start_ix ~= nil
 end
 
+---@param line string
+---@return string
+M.tag_action_as_targeted = function(line)
+    if M.is_action_tagged_as_targeted(line) then
+        return line
+    end
+    local target_str = "[◎]"
+    return table.concat({ line, target_str }, " ")
+end
+
 return M
