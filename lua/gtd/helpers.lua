@@ -1,5 +1,9 @@
 local M = {}
 
+M.is_action = function(line)
+    return line:find("%s*- %[ %] ") == 1
+end
+
 M.TOC = function()
     -- local target_dir = vim.fn.fnamemodify(test_filename, ":p:h")
     local target_dir = vim.fn.expand("%:p:h")

@@ -1,8 +1,6 @@
-local M = {}
+local helpers = require("gtd.helpers")
 
-M.is_action = function(line)
-    return line:find("%s*- %[ %] ") == 1
-end
+local M = {}
 
 M.is_subheading = function(line, level)
     local heading_prefix = ("#"):rep(level + 1)
@@ -104,14 +102,14 @@ M.scrape_actions = function()
         -- print("Looking at ", contents[target_row_ix])
         while
             contents[target_row_ix] ~= nil
-            and not M.is_action(contents[target_row_ix])
+            and not helpers.is_action(contents[target_row_ix])
             and not M.is_subheading(contents[target_row_ix], heading_level)
         do
             target_row_ix = target_row_ix + 1
             -- print("Looking at ", contents[target_row_ix])
         end
         local row = contents[target_row_ix]
-        if row ~= nil and M.is_action(row) then
+        if row ~= nil and helpers.is_action(row) then
             print("Found next action:", row)
             M.add_to_next_actions(context, row)
         end
