@@ -1,8 +1,6 @@
-local M = {}
+local helpers = require("gtd.helpers")
 
-M.is_action = function(line)
-    return line:find("%s*- %[ %] ") == 1
-end
+local M = {}
 
 M.is_subheading = function(line, level)
     local heading_prefix = ("#"):rep(level + 1)
@@ -65,8 +63,6 @@ M.scrape_actions = function()
             heading_level = #row:match("[#]+")
         end
     end
-    -- P(table.unpack(contents, 1, 3))
-    -- P(contents)
     -- local contents_after_organize = { unpack(contents, organize_row_ix + 1, #contents) }
     local contents_after_organize = vim.list_slice(contents, organize_row_ix + 1)
     local next_heading_row_ix = #contents
@@ -77,11 +73,9 @@ M.scrape_actions = function()
     end
 
     local tasks_block = vim.fn.getbufline(filename, organize_row_ix, next_heading_row_ix - 1)
-    P(tasks_block)
 
     local contexts = {}
     -- vim.list_extend(contexts, { 1 })
-    P(contexts)
 
     local heading_prefix = ("#"):rep(heading_level + 1) .. " "
     for row_offset, row in ipairs(tasks_block) do
@@ -94,7 +88,6 @@ M.scrape_actions = function()
                 vim.tbl_extend("error", contexts, { [context] = row_offset + organize_row_ix - 1 })
         end
     end
-    P(contexts)
     print(contexts["Another context"])
     print(contexts["Packing list"])
 
@@ -104,14 +97,14 @@ M.scrape_actions = function()
         -- print("Looking at ", contents[target_row_ix])
         while
             contents[target_row_ix] ~= nil
-            and not M.is_action(contents[target_row_ix])
+            and not helpers.is_action(contents[target_row_ix])
             and not M.is_subheading(contents[target_row_ix], heading_level)
         do
             target_row_ix = target_row_ix + 1
             -- print("Looking at ", contents[target_row_ix])
         end
         local row = contents[target_row_ix]
-        if row ~= nil and M.is_action(row) then
+        if row ~= nil and helpers.is_action(row) then
             print("Found next action:", row)
             M.add_to_next_actions(context, row)
         end

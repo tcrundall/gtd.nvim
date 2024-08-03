@@ -23,19 +23,6 @@ local T = new_set({
     },
 })
 
-T["identifying valid actions"] = new_set({
-    parametrize = {
-        { "- [ ] action", true },
-        { "- [ ] ", true },
-        { "- [ ]", false },
-        { "- [x] action", false },
-        { "", false },
-    },
-})
-T["identifying valid actions"]["works"] = function(action_str, result)
-    eq(child.lua_get("M.is_action('" .. action_str .. "')"), result)
-end
-
 T["identifying subheadings"] = new_set({
     parametrize = {
         { "### some heading", 1, true },

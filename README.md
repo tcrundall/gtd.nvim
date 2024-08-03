@@ -32,8 +32,9 @@ A plugin that facilitates utilizing the Getting Things Done framework in Neovim.
 - [ ] UntargetNextAction
 - [ ] Helper methods
   - [x] is_action_targeted
-  - [ ] tag_action_as_targeted
+  - [x] tag_action_as_targeted
   - [ ] target_action
+    - tag it as targeted, add it to next-actions under context
     - this could mark it as the next action: [◎] (<c-k>0o)
   - [ ] is_action_in_file
 
