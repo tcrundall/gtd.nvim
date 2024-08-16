@@ -65,7 +65,7 @@ T["identifying nearest heading"]["works"] = function(heading_line, heading_str)
     eq(child.lua_get("M.get_nearest_heading(...)", { bufnr, 3 }), heading_str)
 end
 
-T["stripping actions"] = new_set({
+T["trimming actions"] = new_set({
     parametrize = {
         { "- [ ] unchecked action", "- [ ] unchecked action" },
         { "- [ ] tagged action [asdfasdf]()", "- [ ] tagged action [asdfasdf]()" },
@@ -73,8 +73,8 @@ T["stripping actions"] = new_set({
         { "   - [x] indented action", "- [x] indented action" },
     },
 })
-T["stripping actions"]["works"] = function(raw_action, trimmed_action)
-    eq(child.lua_get("M.strip_action(...)", { raw_action }), trimmed_action)
+T["trimming actions"]["works"] = function(raw_action, trimmed_action)
+    eq(child.lua_get("M.trim_action(...)", { raw_action }), trimmed_action)
 end
 
 T["checking for id in file"] = new_set({
@@ -91,6 +91,18 @@ T["checking for id in file"]["works"] = function(tag, is_present)
 
     -- act & assert
     eq(child.lua_get("M.is_tag_in_file(...)", { filename, tag }), is_present)
+end
+
+T["removing target"] = new_set({
+    parametrize = {
+        { "target at end [◎]", "target at end" },
+        { "[◎] target at start", " target at start" },
+        { "target [◎] in middle", "target in middle" },
+        { "no target at all", "no target at all" },
+    },
+})
+T["removing target"]["works"] = function(raw_action, targetless_action)
+    eq(child.lua_get("M.remove_target(...)", { raw_action }), targetless_action)
 end
 
 return T

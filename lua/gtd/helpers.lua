@@ -14,9 +14,18 @@ end
 
 ---@param action_line string
 ---@return string
-M.strip_action = function(action_line)
+M.trim_action = function(action_line)
     local pattern = "%s*(- %[[x| ]%] .*)"
-    return action_line:gmatch(pattern)()
+    local action_line_without_leading_whitespace = action_line:gmatch(pattern)()
+    return M.remove_target(action_line_without_leading_whitespace)
+end
+
+---@param action_line string
+---@return string
+M.remove_target = function(action_line)
+    local pattern = "[ ]?%[◎%]"
+    local result = action_line:gsub(pattern, "")
+    return result
 end
 
 ---@param bufnr integer
