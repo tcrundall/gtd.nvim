@@ -46,26 +46,43 @@ M.is_action_in_contents = function(action_line, contents)
     return
 end
 
+---@param filename string
+---@return integer
 M.ensure_buf_loaded = function(filename)
-    vim.fn.bufadd(filename)
+    local bufnr = vim.fn.bufadd(filename)
     vim.fn.bufload(filename)
+    return bufnr
 end
 
 M.is_action_in_file = function(action, filename)
-    M.ensure_buf_loaded(filename)
-    local matches = vim.fn.matchbufline(filename, action, 1, "$")
+    local bufnr = M.ensure_buf_loaded(filename)
+    local matches = vim.fn.matchbufline(bufnr, action, 1, "$")
     return #matches ~= 0
 end
 
--- local filename = "/Users/tcrundall/Coding/GtdPlugin/lua/gtd/random_tags.lua"
--- local filename = "lua/gtd/random_tags.lua"
--- local filename = "~/Coding/GtdPlugin/lua/gtd/helpers.lua"
-local filename = "~/Coding/GtdPlugin/lua/gtd/random_tags.lua"
--- vim.api.nvim_buf_is_loaded
-vim.fn.bufadd(filename)
-vim.fn.bufload(filename)
-local line = "--- Append a concealed random tag, if not already present"
--- local line = "Append.*"
+---@param filename string
+---@param tag string
+---@return boolean
+M.is_tag_in_file = function(filename, tag)
+    local bufnr = M.ensure_buf_loaded(filename)
+    local matches = vim.fn.matchbufline(bufnr, ".*" .. tag .. ".*", 1, "$")
+    return #matches ~= 0
+end
+
+M.get_file_contents = function(filename)
+    local bufnr = M.ensure_buf_loaded(filename)
+    return vim.api.nvim_buf_get_lines(bufnr, 0, 10000, false)
+end
+
+-- -- local filename = "/Users/tcrundall/Coding/GtdPlugin/lua/gtd/random_tags.lua"
+-- -- local filename = "lua/gtd/random_tags.lua"
+-- -- local filename = "~/Coding/GtdPlugin/lua/gtd/helpers.lua"
+-- local filename = "~/Coding/GtdPlugin/lua/gtd/random_tags.lua"
+-- -- vim.api.nvim_buf_is_loaded
+-- vim.fn.bufadd(filename)
+-- vim.fn.bufload(filename)
+-- local line = "--- Append a concealed random tag, if not already present"
+-- -- local line = "Append.*"
 
 M.TOC = function()
     -- local target_dir = vim.fn.fnamemodify(test_filename, ":p:h")

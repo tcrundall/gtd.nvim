@@ -77,4 +77,20 @@ T["stripping actions"]["works"] = function(raw_action, trimmed_action)
     eq(child.lua_get("M.strip_action(...)", { raw_action }), trimmed_action)
 end
 
+T["checking for id in file"] = new_set({
+    parametrize = {
+        { "asdfasdf", true },
+        { "abcdefg", true },
+        { "ASDFASDF", true },
+        { "12341234", false },
+    },
+})
+T["checking for id in file"]["works"] = function(tag, is_present)
+    -- arrange
+    local filename = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
+
+    -- act & assert
+    eq(child.lua_get("M.is_tag_in_file(...)", { filename, tag }), is_present)
+end
+
 return T
