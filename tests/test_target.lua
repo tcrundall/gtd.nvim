@@ -66,13 +66,13 @@ end
 
 T["targeting valid action"] = new_set({
     parametrize = {
-        { "- [ ] targeted action [](asdfasdf)" },
-        { "    - [ ] targeted action [](ASDFASDF)" },
-        { "- [ ] targeted action [](12341234)" },
+        { "- [ ] targeted action [](targetd1)" },
+        { "    - [ ] targeted action [](targetd2)" },
+        { "- [ ] targeted action [](targetd3)" },
     },
 })
 T["targeting valid action"]["adds action to Next Actions"] = function(action_line)
-    child.o.lines, child.o.columns = 15, 50
+    child.o.lines, child.o.columns = 25, 80
     child.bo.readonly = false
 
     local context = "## Existing Context 1"
@@ -94,7 +94,7 @@ T["targeting valid action"]["adds action to Next Actions"] = function(action_lin
 end
 
 T["targeting valid action"]["tags action as targeted"] = function(action_line)
-    child.o.lines, child.o.columns = 15, 50
+    child.o.lines, child.o.columns = 25, 80
     child.bo.readonly = false
 
     local lines = { action_line, action_line }
@@ -123,7 +123,7 @@ T["targeting valid untagged action"] = new_set({
     },
 })
 T["targeting valid untagged action"]["adds id tag and target tag"] = function(action_line)
-    child.o.lines, child.o.columns = 15, 50
+    child.o.lines, child.o.columns = 25, 80
     child.bo.readonly = false
 
     -- Arrange
@@ -152,9 +152,6 @@ T["targeting invalid action"] = new_set({
     },
 })
 T["targeting invalid action"]["does not change line"] = function(action_line)
-    child.o.lines, child.o.columns = 15, 50
-    child.bo.readonly = false
-
     -- Arrange
     child.lua("vim.api.nvim_buf_set_lines(...)", { 0, 0, 1, false, { action_line } })
     child.lua("vim.fn.cursor(1, 0)")
@@ -167,8 +164,7 @@ T["targeting invalid action"]["does not change line"] = function(action_line)
     eq(actual_line, action_line)
 end
 T["targeting invalid action"]["does not add to Next Actions"] = function(action_line)
-    child.o.lines, child.o.columns = 15, 50
-    child.bo.readonly = false
+    child.o.lines, child.o.columns = 25, 80
 
     -- Arrange
     child.lua("vim.api.nvim_buf_set_lines(...)", { 0, 0, 1, false, { action_line } })
