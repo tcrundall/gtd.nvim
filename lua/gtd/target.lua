@@ -40,7 +40,8 @@ M.target_action = function()
         return "Not an action!"
     end
 
-    action_line = random_tags.ensure_tagged(action_line)
+    local tag
+    action_line, tag = random_tags.ensure_tagged(action_line)
 
     local line_number = vim.fn.line(".")
     line_number = line_number - 1
@@ -51,7 +52,10 @@ M.target_action = function()
 
     -- TODO: use configuration for next-action file path
     local filename = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
-    sync.add_to_next_actions(context, helpers.strip_action(action_line), filename)
+
+    if not helpers.is_tag_in_file(filename, tag) then
+        sync.add_to_next_actions(context, helpers.trim_action(action_line), filename)
+    end
 
     action_line = M.tag_action_as_targeted(action_line)
     vim.api.nvim_set_current_line(action_line)

@@ -18,6 +18,8 @@ M.find_line = function(contents, pattern)
 end
 
 M.find_heading = function(contents, heading)
+    -- TODO: Make resilient to special characters
+    -- e.g. "-"
     return M.find_line(contents, "[#]+ " .. heading)
 end
 

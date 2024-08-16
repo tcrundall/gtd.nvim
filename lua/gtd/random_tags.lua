@@ -43,19 +43,24 @@ end
 
 --- Append a concealed random tag, if not already present
 ---@param line string
----@return string
+---@return string, string
 M.ensure_tagged = function(line)
     local tag_pattern = "%[%]%([%a%d]+%)"
-    local _, end_ix = line:find(tag_pattern)
+    local start_ix, end_ix = line:find(tag_pattern)
+    local tag = ""
 
-    if end_ix == nil then
-        return string.format("%s [](%s)", line, M.generate_random_tag())
+    if start_ix == nil or end_ix == nil then
+        tag = M.generate_random_tag()
+        -- return nil
+        return string.format("%s [](%s)", line, tag), tag
     end
+
+    tag = line:sub(start_ix, end_ix)
 
     if end_ix ~= #line then
         print("Warning: apparent tag is not at end of line")
     end
-    return line
+    return line, tag
 end
 
 return M

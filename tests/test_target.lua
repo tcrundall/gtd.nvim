@@ -184,4 +184,40 @@ T["targeting invalid action"]["does not add to Next Actions"] = function(action_
     expect.reference_screenshot(child.get_screenshot())
 end
 
+T["targeting already targeted action"] = new_set({
+    parametrize = {
+        { "- [ ] targeted and missing from next actions [](targmiss) [◎]" },
+        { "- [ ] untargeted and present in next actions [](ntarpres)" },
+        { "- [ ] untargeted and missing in next actions [](ntarmiss)" },
+        { "- [ ] targeted and present in next actions [](targpres) [◎]" },
+        { "- [ ] oddly targeted [◎] and missing in next actions [](otarmiss)" },
+    },
+})
+-- TODO: Check
+-- - target is present
+-- - tag is in next-actions
+-- - no targets are in next-actions
+T["targeting already targeted action"]["adds target if missing and adds to next actions"] = function(
+    action_line
+)
+    child.o.lines, child.o.columns = 25, 80
+    child.bo.readonly = false
+    local lines = { "## Target Practice", "", action_line }
+    local next_actions_file = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
+
+    -- Arrange
+    child.lua("vim.api.nvim_buf_set_lines(...)", { 0, 0, 1, false, lines })
+    child.lua("vim.fn.cursor(3, 0)")
+
+    -- Act
+    child.lua("M.target_action()")
+
+    -- Assert
+    local action_line_after = child.lua_get("vim.api.nvim_get_current_line()")
+    eq(child.lua_get("M.is_action_tagged_as_targeted(...)", { action_line_after }), true)
+    local bufnr = child.lua_get("vim.fn.bufadd(...)", { next_actions_file })
+    child.lua("vim.api.nvim_set_current_buf(...)", { bufnr })
+    expect.reference_screenshot(child.get_screenshot())
+end
+
 return T
