@@ -3,6 +3,7 @@ vim.cmd("set rtp+=" .. vim.fn.getcwd())
 package.loaded["gtd.checkboxes"] = nil
 package.loaded["gtd.sync"] = nil
 package.loaded["gtd.random_tags"] = nil
+package.loaded["gtd.target"] = nil
 --
 
 local checkboxes = require("gtd.checkboxes")

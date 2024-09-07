@@ -101,7 +101,7 @@ T["targeting valid action"]["tags action as targeted"] = function(action_line)
 
     -- Arrange
     child.lua("vim.api.nvim_buf_set_lines(...)", { 0, 0, 1, false, lines })
-    child.lua("vim.fn.cursor(4, 0)")
+    child.lua("vim.fn.cursor(2, 0)")
 
     -- Act
     child.lua("M.target_action()")
@@ -115,6 +115,25 @@ T["targeting valid action"]["tags action as targeted"] = function(action_line)
     expect.reference_screenshot(child.get_screenshot())
 end
 
+T["targeting valid action"]["retains original indentation"] = function(action_line)
+    local lines = { action_line }
+
+    -- Arrange
+    child.lua("vim.api.nvim_buf_set_lines(...)", { 0, 0, 1, false, lines })
+    child.lua("vim.fn.cursor(1, 0)")
+    local bulletpoint_pattern = "- %[ %]"
+    local expected_bulletpoint_ix = action_line:find(bulletpoint_pattern)
+
+    -- Act
+    child.lua("M.target_action()")
+
+    -- Assert
+    local actual_line = child.lua_get("vim.api.nvim_buf_get_lines(0, 0, 1, false)")[1]
+    local actual_bulletpoint_ix = actual_line:find(bulletpoint_pattern)
+
+    eq(expected_bulletpoint_ix, actual_bulletpoint_ix)
+end
+
 T["targeting valid untagged action"] = new_set({
     parametrize = {
         { "- [ ] targeted action " },
@@ -123,6 +142,27 @@ T["targeting valid untagged action"] = new_set({
     },
 })
 T["targeting valid untagged action"]["adds id tag and target tag"] = function(action_line)
+    child.o.lines, child.o.columns = 25, 80
+    child.bo.readonly = false
+
+    -- Arrange
+    child.lua("vim.api.nvim_buf_set_lines(...)", { 0, 0, 1, false, { action_line, action_line } })
+    child.lua("vim.fn.cursor(2, 0)")
+
+    -- Act
+    child.lua("M.target_action()")
+
+    -- Assert
+    local actual_line = child.lua_get("vim.api.nvim_buf_get_lines(0, 1, 2, false)")[1]
+    local target_pattern = " %[◎%]"
+    local id_tag_pattern = "%[%]%([%a%d]+%)"
+    local target_tag_ix = actual_line:find(target_pattern)
+    local id_tag_ix = actual_line:find(id_tag_pattern)
+
+    neq(target_tag_ix, nil)
+    neq(id_tag_ix, nil)
+end
+T["targeting valid untagged action"]["retains indentation"] = function(action_line)
     child.o.lines, child.o.columns = 25, 80
     child.bo.readonly = false
 

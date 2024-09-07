@@ -38,7 +38,10 @@ A plugin that facilitates utilizing the Getting Things Done framework in Neovim.
     - [x] this could mark it as the next action: [◎] (<c-k>0o)
     - [x] is_action_in_file or is_id_in_file
     - [x] ensure no duplicates in next-actions
-    - [ ] expose as top level function
+    - [x] expose as top level function
+    - [x] fix bug: targetting now retains indentation level
+    - [ ] Change user function to a toggle
+    - [ ] Don't include target in NextActions file
 
 ### Scraping actions (low-prio)
 
