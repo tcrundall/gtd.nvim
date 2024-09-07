@@ -41,7 +41,10 @@ A plugin that facilitates utilizing the Getting Things Done framework in Neovim.
     - [x] expose as top level function
     - [x] fix bug: targetting now retains indentation level
     - [ ] Change user function to a toggle
+      - [ ] Refactor into one top level and mutliple helper
+      - [ ] Test that untargeting removes from NextActions file
     - [ ] Don't include target in NextActions file
+    - [ ] Write next-actions file after additions
 
 ### Scraping actions (low-prio)
 
