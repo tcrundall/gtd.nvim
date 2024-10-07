@@ -33,6 +33,7 @@ M.untag_action_as_targeted = function(line)
     return line:sub(1, start_ix - 1) .. line:sub(end_ix + 1)
 end
 
+--- Tag an action as targeted and add to next-actions
 M.target_action = function()
     local action_line = vim.api.nvim_get_current_line()
 
@@ -42,26 +43,13 @@ M.target_action = function()
 
     local tag
     action_line, tag = random_tags.ensure_tagged(action_line)
-
-    local line_number = vim.fn.line(".")
-    line_number = line_number - 1
-
-    local default_context = "Miscellaneous"
-    local context = helpers.get_nearest_heading(0, line_number)
-    context = context or default_context
-
-    -- TODO: use configuration for next-action file path
-    local filename = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
-
-    if not helpers.is_tag_in_file(filename, tag) then
-        sync.add_to_next_actions(context, helpers.trim_action(action_line), filename)
-    end
-
+    sync.add_to_next_actions(action_line, tag)
     action_line = M.tag_action_as_targeted(action_line)
     vim.api.nvim_set_current_line(action_line)
     return action_line
 end
 
+--- toggle an action as targeted or not (adding tag if missing)
 M.toggle_target = function()
     local action_line = vim.api.nvim_get_current_line()
 
@@ -73,26 +61,13 @@ M.toggle_target = function()
     action_line, tag = random_tags.ensure_tagged(action_line)
 
     if M.is_action_tagged_as_targeted(action_line) then
+        -- TODO: Remove from next actions
+        -- sync.remove_from_next_actions(tag)
         action_line = M.untag_action_as_targeted(action_line)
-        vim.api.nvim_set_current_line(action_line)
-        return action_line
+    else
+        sync.add_to_next_actions(action_line, tag)
+        action_line = M.tag_action_as_targeted(action_line)
     end
-
-    local line_number = vim.fn.line(".")
-    line_number = line_number - 1
-
-    local default_context = "Miscellaneous"
-    local context = helpers.get_nearest_heading(0, line_number)
-    context = context or default_context
-
-    -- TODO: use configuration for next-action file path
-    local filename = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
-
-    if not helpers.is_tag_in_file(filename, tag) then
-        sync.add_to_next_actions(context, helpers.trim_action(action_line), filename)
-    end
-
-    action_line = M.tag_action_as_targeted(action_line)
     vim.api.nvim_set_current_line(action_line)
     return action_line
 end

@@ -82,7 +82,7 @@ T["adding to next actions"]["works"] = function(context)
     local bufnr = child.lua_get("vim.fn.bufadd('" .. filename .. "')")
 
     -- Act
-    child.lua("M.add_to_next_actions(...)", { context, action, filename })
+    child.lua("M.insert_action_into_next_actions(...)", { context, action, filename })
 
     -- Assert
     child.lua("vim.api.nvim_set_current_buf(...)", { bufnr })

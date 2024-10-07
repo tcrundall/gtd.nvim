@@ -30,7 +30,36 @@ M.get_file_contents = function(filename)
     return contents, bufnr
 end
 
-M.add_to_next_actions = function(context, action, filename)
+---Add current action line to next action file (if not present)
+---TODO: Remove targets before adding to next-actions
+---@param action_line string
+---@param tag string
+M.add_to_next_actions = function(action_line, tag)
+    local next_actions_file = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
+    if helpers.is_tag_in_file(next_actions_file, tag) then
+        print("Action is already in ", next_actions_file, ". Out of sync?")
+    else
+        local line_number = vim.fn.line(".")
+        line_number = line_number - 1
+
+        local default_context = "Miscellaneous"
+        local context = helpers.get_nearest_heading(0, line_number)
+        context = context or default_context
+
+        M.insert_action_into_next_actions(
+            context,
+            helpers.trim_action(action_line),
+            next_actions_file
+        )
+    end
+end
+
+---Insert a given action into next action file, under the subheading
+---corresponding to the provided context.
+---@param context string
+---@param action string
+---@param filename string
+M.insert_action_into_next_actions = function(context, action, filename)
     -- TODO: Improve by making case insensitive
     filename = filename or "./next-actions.md"
     local contents, bufnr = M.get_file_contents(filename)
@@ -108,7 +137,7 @@ M.scrape_actions = function()
         local row = contents[target_row_ix]
         if row ~= nil and helpers.is_action(row) then
             print("Found next action:", row)
-            M.add_to_next_actions(context, row)
+            M.insert_action_into_next_actions(context, row)
         end
     end
 end
