@@ -4,7 +4,7 @@ local sync = require("gtd.sync")
 
 local M = {}
 
-local TARGET_PATTERN = "%[◎%]"
+local TARGET_PATTERN = "%s*%[◎%]"
 local TARGET_STR = "[◎]"
 
 ---@param line string
@@ -42,6 +42,41 @@ M.target_action = function()
 
     local tag
     action_line, tag = random_tags.ensure_tagged(action_line)
+
+    local line_number = vim.fn.line(".")
+    line_number = line_number - 1
+
+    local default_context = "Miscellaneous"
+    local context = helpers.get_nearest_heading(0, line_number)
+    context = context or default_context
+
+    -- TODO: use configuration for next-action file path
+    local filename = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
+
+    if not helpers.is_tag_in_file(filename, tag) then
+        sync.add_to_next_actions(context, helpers.trim_action(action_line), filename)
+    end
+
+    action_line = M.tag_action_as_targeted(action_line)
+    vim.api.nvim_set_current_line(action_line)
+    return action_line
+end
+
+M.toggle_target = function()
+    local action_line = vim.api.nvim_get_current_line()
+
+    if not helpers.is_action(action_line) then
+        return "Not an action!"
+    end
+
+    local tag
+    action_line, tag = random_tags.ensure_tagged(action_line)
+
+    if M.is_action_tagged_as_targeted(action_line) then
+        action_line = M.untag_action_as_targeted(action_line)
+        vim.api.nvim_set_current_line(action_line)
+        return action_line
+    end
 
     local line_number = vim.fn.line(".")
     line_number = line_number - 1

@@ -49,7 +49,9 @@ T["if action is not tagged as targeted"] = new_set({
         { "" },
     },
 })
-T["if action is not tagged as targeted"]["it is correctly identified"] = function(action_line)
+T["if action is not tagged as targeted"]["it is correctly identified as not targeted"] = function(
+    action_line
+)
     eq(child.lua_get("M.is_action_tagged_as_targeted(...)", { action_line }), false)
 end
 T["if action is not tagged as targeted"]["gains tag when tagged"] = function(action_line)
@@ -254,6 +256,29 @@ T["targeting already targeted action"]["adds target if missing and adds to next 
     local bufnr = child.lua_get("vim.fn.bufadd(...)", { next_actions_file })
     child.lua("vim.api.nvim_set_current_buf(...)", { bufnr })
     expect.reference_screenshot(child.get_screenshot())
+end
+
+T["toggling target on valid action"] = new_set({
+    parametrize = {
+        { "- [ ] toggle action [](toggle1)", "- [ ] toggle action [](toggle1) [◎]" },
+        { "    - [ ] toggle action [](toggle2)", "    - [ ] toggle action [](toggle2) [◎]" },
+        { "- [ ] toggle action [](toggle3) [◎]", "- [ ] toggle action [](toggle3)" },
+    },
+})
+T["toggling target on valid action"]["toggles correctly"] = function(
+    action_line_before,
+    expected_line
+)
+    -- Arrange
+    child.lua("vim.api.nvim_buf_set_lines(...)", { 0, 0, 1, false, { action_line_before } })
+    child.lua("vim.fn.cursor(1, 0)")
+
+    -- Act
+    child.lua("M.toggle_target()")
+
+    -- Assert
+    local actual_line = child.lua_get("vim.api.nvim_buf_get_lines(0, 0, 1, false)")[1]
+    eq(actual_line, expected_line)
 end
 
 return T
