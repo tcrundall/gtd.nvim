@@ -43,7 +43,6 @@ M.untarget_action = function()
 
     local tag
     action_line, tag = random_tags.ensure_tagged(action_line)
-    print("Got tag: ", tag)
     sync.remove_from_next_actions(tag)
     action_line = M.untag_action_as_targeted(action_line)
     vim.api.nvim_set_current_line(action_line)
