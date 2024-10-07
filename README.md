@@ -63,6 +63,7 @@ manually targeting actions in project files**
 ### Future features
 
 - [ ] feat: actually make it a plugin
+  - [ ] configure location of next-actions file
 - [ ] feat: delete checked tasks
 - [ ] feat: connected actions
 - [ ] feat: template a project file
