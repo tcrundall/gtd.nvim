@@ -10,6 +10,7 @@ package.loaded["gtd.helpers"] = nil
 local checkboxes = require("gtd.checkboxes")
 local sync = require("gtd.sync")
 local target = require("gtd.target")
+local helpers = require("gtd.helpers")
 
 local M = {}
 
@@ -28,14 +29,17 @@ end, { nargs = "?" })
 
 vim.api.nvim_create_user_command("GtdTargetAction", function()
     M.target_action()
+    helpers.write_all_files()
 end, {})
 
 vim.api.nvim_create_user_command("GtdUntargetAction", function()
     M.untarget_action()
+    helpers.write_all_files()
 end, {})
 
 vim.api.nvim_create_user_command("GtdToggleTargetAction", function()
     M.toggle_action()
+    helpers.write_all_files()
 end, {})
 
 return M

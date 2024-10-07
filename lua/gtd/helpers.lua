@@ -124,4 +124,9 @@ M.TOC = function()
     vim.api.nvim_buf_set_lines(0, toc_start_line, toc_start_line + #toc_entries, false, toc_entries)
 end
 
+M.write_all_files = function()
+    local enter = vim.api.nvim_replace_termcodes("<CR>", true, false, true)
+    vim.api.nvim_feedkeys(":wa" .. enter, "n", false)
+end
+
 return M

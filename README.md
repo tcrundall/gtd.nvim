@@ -27,24 +27,24 @@ A plugin that facilitates utilizing the Getting Things Done framework in Neovim.
 
 ### Add to Next Actions
 
-- [ ] TargetAsNextActions
-- [ ] ToggleNextAction
-- [ ] UntargetNextAction
-- [ ] Helper methods
+- [x] TargetAsNextActions
+- [x] ToggleNextAction
+- [x] UntargetNextAction
+- [x] Helper methods
   - [x] is_action_targeted
   - [x] tag_action_as_targeted
-  - [ ] target_action
+  - [x] target_action
     - [x] tag it as targeted, add it to next-actions under context
     - [x] this could mark it as the next action: [◎] (<c-k>0o)
     - [x] is_action_in_file or is_id_in_file
     - [x] ensure no duplicates in next-actions
     - [x] expose as top level function
     - [x] fix bug: targetting now retains indentation level
-    - [ ] Change user function to a toggle
-      - [ ] Refactor into one top level and mutliple helper
+    - [x] Change user function to a toggle
+      - [x] Refactor into one top level and mutliple helper
       - [x] Test that untargeting removes from NextActions file
     - [x] Don't include target in NextActions file
-    - [ ] Write next-actions file after additions
+    - [x] Write next-actions file after additions
 
 ### Scraping actions (low-prio)
 
