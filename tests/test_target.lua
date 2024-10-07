@@ -333,4 +333,32 @@ T["for targetted actions but some missing"]["toggling removes target and removes
     expect.reference_screenshot(child.get_screenshot())
 end
 
+T["for untargetted actions but some present"] = new_set({
+    parametrize = {
+        { "- [ ] untargeted and present in next actions [](ntarpres)" },
+        { "- [ ] untargeted and missing in next actions [](ntarmiss)" },
+    },
+})
+T["for untargetted actions but some present"]["toggling adds target and adds to next actions if missing"] = function(
+    action_line
+)
+    child.o.lines, child.o.columns = 25, 80
+    child.bo.readonly = false
+    local lines = { "## Target Practice", "", action_line }
+    local next_actions_file = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
+
+    -- Arrange
+    child.lua("vim.api.nvim_buf_set_lines(...)", { 0, 0, 1, false, lines })
+    child.lua("vim.fn.cursor(3, 0)")
+
+    -- Act
+    child.lua("M.toggle_target()")
+
+    -- Assert
+    local action_line_after = child.lua_get("vim.api.nvim_get_current_line()")
+    eq(child.lua_get("M.is_action_tagged_as_targeted(...)", { action_line_after }), true)
+    local bufnr = child.lua_get("vim.fn.bufadd(...)", { next_actions_file })
+    child.lua("vim.api.nvim_set_current_buf(...)", { bufnr })
+    expect.reference_screenshot(child.get_screenshot())
+end
 return T

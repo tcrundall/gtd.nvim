@@ -14,3 +14,11 @@
 
 - [ ] untargeted and present in next actions [](ntarpres)
 - [ ] targeted and present in next actions [](targpres)
+
+## Miscellaneous
+
+- [ ] to do [](sy5JH5vj)
+
+## At home
+
+- [ ] antoher to do [](Cl2OY6ni)
