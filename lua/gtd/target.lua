@@ -33,6 +33,23 @@ M.untag_action_as_targeted = function(line)
     return line:sub(1, start_ix - 1) .. line:sub(end_ix + 1)
 end
 
+--- Untag an action as targeted and remove from next-actions
+M.untarget_action = function()
+    local action_line = vim.api.nvim_get_current_line()
+
+    if not helpers.is_action(action_line) then
+        return "Not an action!"
+    end
+
+    local tag
+    action_line, tag = random_tags.ensure_tagged(action_line)
+    print("Got tag: ", tag)
+    sync.remove_from_next_actions(tag)
+    action_line = M.untag_action_as_targeted(action_line)
+    vim.api.nvim_set_current_line(action_line)
+    return action_line
+end
+
 --- Tag an action as targeted and add to next-actions
 M.target_action = function()
     local action_line = vim.api.nvim_get_current_line()

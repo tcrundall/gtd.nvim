@@ -2,9 +2,9 @@ MiniTest = require("mini.test") -- only here to supress Undefined global warning
 
 local new_set = MiniTest.new_set
 local expect, eq, neq = MiniTest.expect, MiniTest.expect.equality, MiniTest.expect.no_equality
-local not_implemented = function()
-    eq("NOT IMPLEMENTED", nil)
-end
+-- local not_implemented = function()
+--     eq("NOT IMPLEMENTED", nil)
+-- end
 
 local child = MiniTest.new_child_neovim()
 
@@ -222,7 +222,7 @@ T["targeting invalid action"]["does not add to Next Actions"] = function(action_
     expect.reference_screenshot(child.get_screenshot())
 end
 
-T["targeting already targeted action"] = new_set({
+T["for inconsistently targetted actions"] = new_set({
     parametrize = {
         { "- [ ] targeted and missing from next actions [](targmiss) [◎]" },
         { "- [ ] untargeted and present in next actions [](ntarpres)" },
@@ -235,7 +235,7 @@ T["targeting already targeted action"] = new_set({
 -- - target is present
 -- - tag is in next-actions
 -- - no targets are in next-actions
-T["targeting already targeted action"]["adds target if missing and adds to next actions"] = function(
+T["for inconsistently targetted actions"]["targeting adds target if missing and adds to next actions"] = function(
     action_line
 )
     child.o.lines, child.o.columns = 25, 80
@@ -253,6 +253,29 @@ T["targeting already targeted action"]["adds target if missing and adds to next 
     -- Assert
     local action_line_after = child.lua_get("vim.api.nvim_get_current_line()")
     eq(child.lua_get("M.is_action_tagged_as_targeted(...)", { action_line_after }), true)
+    local bufnr = child.lua_get("vim.fn.bufadd(...)", { next_actions_file })
+    child.lua("vim.api.nvim_set_current_buf(...)", { bufnr })
+    expect.reference_screenshot(child.get_screenshot())
+end
+
+T["for inconsistently targetted actions"]["untargeting removes target if present and removes from next actions"] = function(
+    action_line
+)
+    child.o.lines, child.o.columns = 25, 80
+    child.bo.readonly = false
+    local lines = { "## Target Practice", "", action_line }
+    local next_actions_file = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
+
+    -- Arrange
+    child.lua("vim.api.nvim_buf_set_lines(...)", { 0, 0, 1, false, lines })
+    child.lua("vim.fn.cursor(3, 0)")
+
+    -- Act
+    child.lua("M.untarget_action()")
+
+    -- Assert
+    local action_line_after = child.lua_get("vim.api.nvim_get_current_line()")
+    eq(child.lua_get("M.is_action_tagged_as_targeted(...)", { action_line_after }), false)
     local bufnr = child.lua_get("vim.fn.bufadd(...)", { next_actions_file })
     child.lua("vim.api.nvim_set_current_buf(...)", { bufnr })
     expect.reference_screenshot(child.get_screenshot())

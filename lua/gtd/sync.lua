@@ -2,6 +2,8 @@ local helpers = require("gtd.helpers")
 
 local M = {}
 
+local NEXT_ACTIONS_FILE = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
+
 M.is_subheading = function(line, level)
     local heading_prefix = ("#"):rep(level + 1)
     return vim.startswith(line, heading_prefix)
@@ -30,14 +32,27 @@ M.get_file_contents = function(filename)
     return contents, bufnr
 end
 
+---Remove action corresponding to tag from next action file (if present)
+---@param tag string
+M.remove_from_next_actions = function(tag)
+    if not helpers.is_tag_in_file(NEXT_ACTIONS_FILE, tag) then
+        print("Action was not in ", NEXT_ACTIONS_FILE, ". Out of sync?")
+    else
+        local line_number = helpers.get_first_location_of_tag_in_file(NEXT_ACTIONS_FILE, tag)
+        if line_number < 0 then
+            print("Could not locate action in next actions file")
+        end
+        M.remove_line_from_next_actions(line_number, NEXT_ACTIONS_FILE)
+    end
+end
+
 ---Add current action line to next action file (if not present)
 ---TODO: Remove targets before adding to next-actions
 ---@param action_line string
 ---@param tag string
 M.add_to_next_actions = function(action_line, tag)
-    local next_actions_file = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
-    if helpers.is_tag_in_file(next_actions_file, tag) then
-        print("Action is already in ", next_actions_file, ". Out of sync?")
+    if helpers.is_tag_in_file(NEXT_ACTIONS_FILE, tag) then
+        print("Action is already in ", NEXT_ACTIONS_FILE, ". Out of sync?")
     else
         local line_number = vim.fn.line(".")
         line_number = line_number - 1
@@ -49,7 +64,7 @@ M.add_to_next_actions = function(action_line, tag)
         M.insert_action_into_next_actions(
             context,
             helpers.trim_action(action_line),
-            next_actions_file
+            NEXT_ACTIONS_FILE
         )
     end
 end
@@ -70,6 +85,18 @@ M.insert_action_into_next_actions = function(context, action, filename)
         context_row_ix = 1000000000
     end
     vim.api.nvim_buf_set_lines(bufnr, context_row_ix + 1, context_row_ix + 1, false, { action })
+end
+
+---Remove a given line from next actions file
+---@param line_number integer
+---@param filename string
+M.remove_line_from_next_actions = function(line_number, filename)
+    -- TODO: Improve by making case insensitive
+    filename = filename or "./next-actions.md"
+    local bufnr = vim.fn.bufadd(filename)
+    vim.fn.bufload(filename)
+
+    vim.api.nvim_buf_set_lines(bufnr, line_number - 1, line_number, false, {})
 end
 
 M.scrape_actions = function()
@@ -137,7 +164,7 @@ M.scrape_actions = function()
         local row = contents[target_row_ix]
         if row ~= nil and helpers.is_action(row) then
             print("Found next action:", row)
-            M.insert_action_into_next_actions(context, row)
+            M.insert_action_into_next_actions(context, row, NEXT_ACTIONS_FILE)
         end
     end
 end

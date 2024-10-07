@@ -48,12 +48,12 @@ M.get_nearest_heading = function(bufnr, line_number)
     return res
 end
 
--- in contents? in file? return position?
--- command exists already in nvim api?
--- in vim api, yes
-M.is_action_in_contents = function(action_line, contents)
-    return
-end
+-- -- in contents? in file? return position?
+-- -- command exists already in nvim api?
+-- -- in vim api, yes
+-- M.is_action_in_contents = function(action_line, contents)
+--     return
+-- end
 
 ---@param filename string
 ---@return integer
@@ -76,6 +76,19 @@ M.is_tag_in_file = function(filename, tag)
     local bufnr = M.ensure_buf_loaded(filename)
     local matches = vim.fn.matchbufline(bufnr, ".*" .. tag .. ".*", 1, "$")
     return #matches ~= 0
+end
+
+---Get line number of first match. -1 indicates no match
+---@param filename string
+---@param tag string
+---@return integer
+M.get_first_location_of_tag_in_file = function(filename, tag)
+    local bufnr = M.ensure_buf_loaded(filename)
+    local matches = vim.fn.matchbufline(bufnr, ".*" .. tag .. ".*", 1, "$")
+    if #matches == 0 then
+        return -1
+    end
+    return matches[1].lnum
 end
 
 M.get_file_contents = function(filename)
