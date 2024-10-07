@@ -78,8 +78,7 @@ M.toggle_target = function()
     action_line, tag = random_tags.ensure_tagged(action_line)
 
     if M.is_action_tagged_as_targeted(action_line) then
-        -- TODO: Remove from next actions
-        -- sync.remove_from_next_actions(tag)
+        sync.remove_from_next_actions(tag)
         action_line = M.untag_action_as_targeted(action_line)
     else
         sync.add_to_next_actions(action_line, tag)

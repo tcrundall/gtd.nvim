@@ -19,6 +19,7 @@ M.cycle_checkbox = checkboxes.cycle_checkbox
 M.scrape_actions = sync.scrape_actions
 M.target_action = target.target_action
 M.untarget_action = target.untarget_action
+M.toggle_action = target.toggle_target
 
 vim.api.nvim_create_user_command("CycleCheckbox", function(opts)
     local bool_val = opts.fargs[1] == "true"
@@ -31,6 +32,10 @@ end, {})
 
 vim.api.nvim_create_user_command("GtdUntargetAction", function()
     M.untarget_action()
+end, {})
+
+vim.api.nvim_create_user_command("GtdToggleTargetAction", function()
+    M.toggle_action()
 end, {})
 
 return M
