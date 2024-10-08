@@ -5,16 +5,18 @@ package.loaded["gtd.sync"] = nil
 package.loaded["gtd.random_tags"] = nil
 package.loaded["gtd.target"] = nil
 package.loaded["gtd.helpers"] = nil
+package.loaded["gtd.config"] = nil
 --
 
 local checkboxes = require("gtd.checkboxes")
 local sync = require("gtd.sync")
 local target = require("gtd.target")
 local helpers = require("gtd.helpers")
+local config = require("gtd.config")
 
 local M = {}
 
-M.setup = function() end
+M.setup = config.setup
 
 M.cycle_checkbox = checkboxes.cycle_checkbox
 M.check_action = checkboxes.check_action
