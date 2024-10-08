@@ -20,9 +20,9 @@ A plugin that facilitates utilizing the Getting Things Done framework in Neovim.
   - [x] dedicated tag method
   - [x] don't add tags if already present
   - [x] remove requirement of argument for cycle tag
-- [ ] checking action in Next Actions list completes in project [](asdf)
-- [ ] checking action in project completes in Next Actions list
-- [ ] dedicated "gtd" action for "checking"
+- [x] checking action in Next Actions list completes in project [](asdf)
+- [x] checking action in project completes in Next Actions list
+- [x] dedicated "gtd" action for "checking"
 - [ ] some way to sync: while scraping, if action checked anywhere, check everywhere
 
 ### Add to Next Actions

@@ -23,7 +23,7 @@ T["identifying valid actions"] = new_set({
         { "- [ ] action", true },
         { "- [ ] ", true },
         { "- [ ]", false },
-        { "- [x] action", false },
+        { "- [x] action", true },
         { "", false },
     },
 })

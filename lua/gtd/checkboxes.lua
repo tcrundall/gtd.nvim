@@ -126,6 +126,12 @@ M.uncheck_action = function()
     M.uncheck_action_from_tag(tag)
 end
 
-M.toggle_action_check = function(tag) end
+M.toggle_action_check = function()
+    if M.is_action_checked() then
+        M.uncheck_action()
+    else
+        M.check_action()
+    end
+end
 
 return M

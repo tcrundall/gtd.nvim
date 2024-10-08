@@ -3,7 +3,7 @@ local M = {}
 ---@param line string
 ---@return boolean
 M.is_action = function(line)
-    return line:find("%s*- %[ %] ") == 1
+    return line:find("%s*- %[[ |x]%] ") == 1
 end
 
 ---@param line string
@@ -140,10 +140,8 @@ M.get_all_locations_of_tag = function(tag)
     escaped_tag = escaped_tag:gsub("%(", "\\(")
     escaped_tag = escaped_tag:gsub("%)", "\\)")
     local command = "!rg '" .. escaped_tag .. "' " .. notes_dir .. " -n"
-    print("Command: " .. command)
 
     local rg_res = vim.fn.execute(command)
-    print("RESULT\n==============\n" .. rg_res)
     local results_without_command = vim.fn.split(rg_res, "\r\n\n")[2]
 
     local tag_locations = {}

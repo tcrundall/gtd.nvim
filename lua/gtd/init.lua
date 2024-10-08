@@ -18,6 +18,8 @@ M.setup = function() end
 
 M.cycle_checkbox = checkboxes.cycle_checkbox
 M.check_action = checkboxes.check_action
+M.uncheck_action = checkboxes.uncheck_action
+M.toggle_check = checkboxes.toggle_action_check
 M.scrape_actions = sync.scrape_actions
 M.target_action = target.target_action
 M.untarget_action = target.untarget_action
@@ -30,6 +32,16 @@ end, { nargs = "?" })
 
 vim.api.nvim_create_user_command("GtdCheckAction", function()
     M.check_action()
+    helpers.write_all_files()
+end, {})
+
+vim.api.nvim_create_user_command("GtdUncheckAction", function()
+    M.uncheck_action()
+    helpers.write_all_files()
+end, {})
+
+vim.api.nvim_create_user_command("GtdToggleCheck", function()
+    M.toggle_check()
     helpers.write_all_files()
 end, {})
 

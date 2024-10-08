@@ -189,7 +189,7 @@ end
 T["targeting invalid action"] = new_set({
     parametrize = {
         { "- targeted action " },
-        { "    - [x] targeted action" },
+        { "    - [] targeted action" },
         { "- [  ] targeted action" },
     },
 })

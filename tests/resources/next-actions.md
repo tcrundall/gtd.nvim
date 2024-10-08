@@ -14,7 +14,7 @@
 - [ ] untargeted and present in next actions [](ntarpres)
 - [ ] targeted and present in next actions [](targpres)
 
-## At Home
+## Checking Practice
 
 - [x] Checked project action targeted and present [](prchtapr)
 - [ ] Unchecked project action targeted and present [](pruntapr)

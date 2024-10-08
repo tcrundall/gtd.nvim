@@ -111,7 +111,7 @@ T["unchecking targeted project file action which is present in next actions unch
     child.lua("M.uncheck_action()")
 
     -- Assert
-    eq(child.lua_get("M.is_action_checked(...)"), false)
+    eq(child.lua_get("M.is_action_checked()"), false)
     local next_actions_bufnr = child.lua_get("vim.fn.bufadd(...)", { next_actions_file })
     child.lua("vim.api.nvim_set_current_buf(...)", { next_actions_bufnr })
     expect.reference_screenshot(child.get_screenshot())
@@ -136,7 +136,7 @@ T["unchecking next actions file action unchecks everywhere"] = function()
     child.lua("M.uncheck_action()")
 
     -- Assert
-    eq(child.lua_get("M.is_action_checked(...)"), false)
+    eq(child.lua_get("M.is_action_checked()"), false)
     local example_project_bufnr = child.lua_get("vim.fn.bufadd(...)", { example_project_file })
     child.lua("vim.api.nvim_set_current_buf(...)", { example_project_bufnr })
     expect.reference_screenshot(child.get_screenshot())
@@ -162,7 +162,7 @@ T["checking targeted project file action which is present in next actions checks
     child.lua("M.check_action()")
 
     -- Assert
-    eq(child.lua_get("M.is_action_checked(...)"), true)
+    eq(child.lua_get("M.is_action_checked()"), true)
     local next_actions_bufnr = child.lua_get("vim.fn.bufadd(...)", { next_actions_file })
     child.lua("vim.api.nvim_set_current_buf(...)", { next_actions_bufnr })
     expect.reference_screenshot(child.get_screenshot())
@@ -187,8 +187,7 @@ T["checking next actions file action checks everywhere"] = function()
     child.lua("M.check_action()")
 
     -- Assert
-    local action_line_after = child.lua_get("vim.api.nvim_get_current_line()")
-    eq(child.lua_get("M.is_action_checked(...)"), true)
+    eq(child.lua_get("M.is_action_checked()"), true)
     local example_project_bufnr = child.lua_get("vim.fn.bufadd(...)", { example_project_file })
     child.lua("vim.api.nvim_set_current_buf(...)", { example_project_bufnr })
     expect.reference_screenshot(child.get_screenshot())
