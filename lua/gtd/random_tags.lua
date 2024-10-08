@@ -63,4 +63,16 @@ M.ensure_tagged = function(line)
     return line, tag
 end
 
+---comment
+---@param line string
+M.get_tag = function(line)
+    local tag_pattern = "%[%]%([%a%d]+%)"
+    local tag = nil
+    for match in line:gmatch(tag_pattern) do
+        tag = match
+        break
+    end
+    return tag
+end
+
 return M

@@ -129,4 +129,33 @@ M.write_all_files = function()
     vim.api.nvim_feedkeys(":wa" .. enter, "n", false)
 end
 
+---Get all locations of a tag. Requires ripgrep to be installed
+---@param tag string
+---@return table
+M.get_all_locations_of_tag = function(tag)
+    local notes_dir = "tests/resources/"
+    local escaped_tag = tag
+    escaped_tag = escaped_tag:gsub("%[", "\\[")
+    escaped_tag = escaped_tag:gsub("%]", "\\]")
+    escaped_tag = escaped_tag:gsub("%(", "\\(")
+    escaped_tag = escaped_tag:gsub("%)", "\\)")
+    local command = "!rg '" .. escaped_tag .. "' " .. notes_dir .. " -n"
+    print("Command: " .. command)
+
+    local rg_res = vim.fn.execute(command)
+    print("RESULT\n==============\n" .. rg_res)
+    local results_without_command = vim.fn.split(rg_res, "\r\n\n")[2]
+
+    local tag_locations = {}
+    for _, result in ipairs(vim.fn.split(results_without_command, "\n")) do
+        result = vim.fn.split(result, ":")
+        local location = {
+            filename = result[1],
+            line_number = tonumber(result[2]),
+        }
+        table.insert(tag_locations, location)
+    end
+    return tag_locations
+end
+
 return M

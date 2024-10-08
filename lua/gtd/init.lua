@@ -17,6 +17,7 @@ local M = {}
 M.setup = function() end
 
 M.cycle_checkbox = checkboxes.cycle_checkbox
+M.check_action = checkboxes.check_action
 M.scrape_actions = sync.scrape_actions
 M.target_action = target.target_action
 M.untarget_action = target.untarget_action
@@ -26,6 +27,11 @@ vim.api.nvim_create_user_command("GtdCycleCheckbox", function(opts)
     local bool_val = opts.fargs[1] == "true"
     M.cycle_checkbox(bool_val)
 end, { nargs = "?" })
+
+vim.api.nvim_create_user_command("GtdCheckAction", function()
+    M.check_action()
+    helpers.write_all_files()
+end, {})
 
 vim.api.nvim_create_user_command("GtdTargetAction", function()
     local res = M.target_action()

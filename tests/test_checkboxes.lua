@@ -1,6 +1,7 @@
 local new_set = MiniTest.new_set
 local expect, eq, neq = MiniTest.expect, MiniTest.expect.equality, MiniTest.expect.no_equality
 local test_name
+local helpers = require("gtd.helpers")
 
 -- Create (but not start) child Neovim object
 local child = MiniTest.new_child_neovim()
@@ -48,7 +49,6 @@ T[test_name]["works with no tag"] = function(current_line, expected_line)
         expected_line
     )
 end
-
 T[test_name]["works with tag"] = function(current_line, expected_line)
     local tag_pattern = "%[%]%([%a%d]+%)"
     local tagged = "true"
@@ -64,7 +64,6 @@ T[test_name]["works with tag"] = function(current_line, expected_line)
     eq(start_ix, #expected_line + 2)
     eq(end_ix, #actual_line)
 end
-
 T[test_name]["integrated"] = function(current_checkbox, expected_next)
     -- arrange
     child.o.lines, child.o.columns = 15, 50
@@ -78,6 +77,120 @@ T[test_name]["integrated"] = function(current_checkbox, expected_next)
 
     -- assert
     eq(child.lua_get("vim.api.nvim_buf_get_lines(0, 0, 4, false)")[4], expected_next)
+    expect.reference_screenshot(child.get_screenshot())
+end
+
+-- -- test unchecking action unchecks everywhere
+-- T["for inconsistently targetted actions"] = new_set({
+--     parametrize = {
+--         { "- [ ] targeted and missing from next actions [](targmiss) [◎]" },
+--         { "- [ ] untargeted and present in next actions [](ntarpres)" },
+--         { "- [ ] untargeted and missing in next actions [](ntarmiss)" },
+--         { "- [ ] targeted and present in next actions [](targpres) [◎]" },
+--         { "- [ ] oddly targeted [◎] and missing in next actions [](otarmiss)" },
+--     },
+-- })
+
+T["unchecking targeted project file action which is present in next actions unchecks everywhere"] = function()
+    -- local action_line = "- [ ] Project action targeted and present [](prtarpre)"
+    local tag = "prchtapr"
+    child.o.lines, child.o.columns = 25, 80
+    child.bo.readonly = false
+    local next_actions_file = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
+    local example_project_file =
+        "/Users/tcrundall/Coding/GtdPlugin/tests/resources/projects/example.md"
+
+    -- Arrange
+    local line_number = helpers.get_first_location_of_tag_in_file(example_project_file, tag)
+
+    local proj_bufnr = child.lua_get("vim.fn.bufadd(...)", { example_project_file })
+    child.lua("vim.api.nvim_set_current_buf(...)", { proj_bufnr })
+    child.lua("vim.fn.cursor(...)", { line_number, 0 })
+
+    -- Act
+    child.lua("M.uncheck_action()")
+
+    -- Assert
+    eq(child.lua_get("M.is_action_checked(...)"), false)
+    local next_actions_bufnr = child.lua_get("vim.fn.bufadd(...)", { next_actions_file })
+    child.lua("vim.api.nvim_set_current_buf(...)", { next_actions_bufnr })
+    expect.reference_screenshot(child.get_screenshot())
+end
+
+T["unchecking next actions file action unchecks everywhere"] = function()
+    local tag = "prchtapr"
+    child.o.lines, child.o.columns = 25, 80
+    child.bo.readonly = false
+    local next_actions_file = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
+    local example_project_file =
+        "/Users/tcrundall/Coding/GtdPlugin/tests/resources/projects/example.md"
+
+    -- Arrange
+    local line_number = helpers.get_first_location_of_tag_in_file(next_actions_file, tag)
+
+    local proj_bufnr = child.lua_get("vim.fn.bufadd(...)", { next_actions_file })
+    child.lua("vim.api.nvim_set_current_buf(...)", { proj_bufnr })
+    child.lua("vim.fn.cursor(...)", { line_number, 0 })
+
+    -- Act
+    child.lua("M.uncheck_action()")
+
+    -- Assert
+    eq(child.lua_get("M.is_action_checked(...)"), false)
+    local example_project_bufnr = child.lua_get("vim.fn.bufadd(...)", { example_project_file })
+    child.lua("vim.api.nvim_set_current_buf(...)", { example_project_bufnr })
+    expect.reference_screenshot(child.get_screenshot())
+end
+
+T["checking targeted project file action which is present in next actions checks everywhere"] = function()
+    -- local action_line = "- [ ] Project action targeted and present [](prtarpre)"
+    local tag = "pruntapr"
+    child.o.lines, child.o.columns = 25, 80
+    child.bo.readonly = false
+    local next_actions_file = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
+    local example_project_file =
+        "/Users/tcrundall/Coding/GtdPlugin/tests/resources/projects/example.md"
+
+    -- Arrange
+    local line_number = helpers.get_first_location_of_tag_in_file(example_project_file, tag)
+
+    local proj_bufnr = child.lua_get("vim.fn.bufadd(...)", { example_project_file })
+    child.lua("vim.api.nvim_set_current_buf(...)", { proj_bufnr })
+    child.lua("vim.fn.cursor(...)", { line_number, 0 })
+
+    -- Act
+    child.lua("M.check_action()")
+
+    -- Assert
+    eq(child.lua_get("M.is_action_checked(...)"), true)
+    local next_actions_bufnr = child.lua_get("vim.fn.bufadd(...)", { next_actions_file })
+    child.lua("vim.api.nvim_set_current_buf(...)", { next_actions_bufnr })
+    expect.reference_screenshot(child.get_screenshot())
+end
+
+T["checking next actions file action checks everywhere"] = function()
+    local tag = "pruntapr"
+    child.o.lines, child.o.columns = 25, 80
+    child.bo.readonly = false
+    local next_actions_file = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
+    local example_project_file =
+        "/Users/tcrundall/Coding/GtdPlugin/tests/resources/projects/example.md"
+
+    -- Arrange
+    local line_number = helpers.get_first_location_of_tag_in_file(next_actions_file, tag)
+
+    local proj_bufnr = child.lua_get("vim.fn.bufadd(...)", { next_actions_file })
+    child.lua("vim.api.nvim_set_current_buf(...)", { proj_bufnr })
+    child.lua("vim.fn.cursor(...)", { line_number, 0 })
+
+    -- Act
+    child.lua("M.check_action()")
+
+    -- Assert
+    local action_line_after = child.lua_get("vim.api.nvim_get_current_line()")
+    eq(child.lua_get("M.is_action_checked(...)"), true)
+    local example_project_bufnr = child.lua_get("vim.fn.bufadd(...)", { example_project_file })
+    child.lua("vim.api.nvim_set_current_buf(...)", { example_project_bufnr })
     expect.reference_screenshot(child.get_screenshot())
 end
 
