@@ -22,8 +22,8 @@
 21|                                                                                
 22|~                                                                               
 23|~                                                                               
-24|~/Coding/GtdPlugin/tests/resources/next-actions.md            1,1            All
-25|Action is already in  /Users/tcr...es/next-actions.md . Out of sync?            
+24|tests/resources/next-actions.md                               1,1            All
+25|Action is already in  tests/resources/next-actions.md . Out of sync?            
 
 --|---------|---------|---------|---------|---------|---------|---------|---------|
 01|00111111111111222222222222222222222222222222222222222222222222222222222222222222

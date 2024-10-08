@@ -1,3 +1,5 @@
+local config = require("gtd.config")
+
 local M = {}
 
 ---@param line string
@@ -133,7 +135,7 @@ end
 ---@param tag string
 ---@return table
 M.get_all_locations_of_tag = function(tag)
-    local notes_dir = "tests/resources/"
+    local notes_dir = config.opts.notes_dir
     local escaped_tag = tag
     escaped_tag = escaped_tag:gsub("%[", "\\[")
     escaped_tag = escaped_tag:gsub("%]", "\\]")

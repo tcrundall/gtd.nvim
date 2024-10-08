@@ -1,8 +1,7 @@
 local helpers = require("gtd.helpers")
+local config = require("gtd.config")
 
 local M = {}
-
-local NEXT_ACTIONS_FILE = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
 
 M.is_subheading = function(line, level)
     local heading_prefix = ("#"):rep(level + 1)
@@ -22,6 +21,7 @@ end
 M.find_heading = function(contents, heading)
     -- TODO: Make resilient to special characters
     -- e.g. "-"
+    -- TODO: Match entire heading
     return M.find_line(contents, "[#]+ " .. heading)
 end
 
@@ -35,14 +35,15 @@ end
 ---Remove action corresponding to tag from next action file (if present)
 ---@param tag string
 M.remove_from_next_actions = function(tag)
-    if not helpers.is_tag_in_file(NEXT_ACTIONS_FILE, tag) then
-        print("Action was not in ", NEXT_ACTIONS_FILE, ". Out of sync?")
+    if not helpers.is_tag_in_file(config.opts.next_actions_file, tag) then
+        print("Action was not in ", config.opts.next_actions_file, ". Out of sync?")
     else
-        local line_number = helpers.get_first_location_of_tag_in_file(NEXT_ACTIONS_FILE, tag)
+        local line_number =
+            helpers.get_first_location_of_tag_in_file(config.opts.next_actions_file, tag)
         if line_number < 0 then
             print("Could not locate action in next actions file")
         end
-        M.remove_line_from_next_actions(line_number, NEXT_ACTIONS_FILE)
+        M.remove_line_from_next_actions(line_number, config.opts.next_actions_file)
     end
 end
 
@@ -51,8 +52,9 @@ end
 ---@param action_line string
 ---@param tag string
 M.add_to_next_actions = function(action_line, tag)
-    if helpers.is_tag_in_file(NEXT_ACTIONS_FILE, tag) then
-        print("Action is already in ", NEXT_ACTIONS_FILE, ". Out of sync?")
+    -- MiniTest.expect.equality(config.opts.next_actions_file, "sync-check")
+    if helpers.is_tag_in_file(config.opts.next_actions_file, tag) then
+        print("Action is already in ", config.opts.next_actions_file, ". Out of sync?")
     else
         local line_number = vim.fn.line(".")
         line_number = line_number - 1
@@ -64,7 +66,7 @@ M.add_to_next_actions = function(action_line, tag)
         M.insert_action_into_next_actions(
             context,
             helpers.trim_action(action_line),
-            NEXT_ACTIONS_FILE
+            config.opts.next_actions_file
         )
     end
 end
@@ -164,7 +166,7 @@ M.scrape_actions = function()
         local row = contents[target_row_ix]
         if row ~= nil and helpers.is_action(row) then
             print("Found next action:", row)
-            M.insert_action_into_next_actions(context, row, NEXT_ACTIONS_FILE)
+            M.insert_action_into_next_actions(context, row, config.opts.next_actions_file)
         end
     end
 end

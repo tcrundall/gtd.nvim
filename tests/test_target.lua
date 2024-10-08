@@ -2,9 +2,6 @@ MiniTest = require("mini.test") -- only here to supress Undefined global warning
 
 local new_set = MiniTest.new_set
 local expect, eq, neq = MiniTest.expect, MiniTest.expect.equality, MiniTest.expect.no_equality
--- local not_implemented = function()
---     eq("NOT IMPLEMENTED", nil)
--- end
 
 local child = MiniTest.new_child_neovim()
 
@@ -80,6 +77,8 @@ T["targeting valid action"]["adds action to Next Actions"] = function(action_lin
     local context = "## Existing Context 1"
 
     local lines = { context, "", action_line }
+    -- eq(child.lua_get("M.config"), "1234")
+    -- eq(child.lua_get("M.next_actions_file"), "1234")
 
     -- Arrange
     child.lua("vim.api.nvim_buf_set_lines(...)", { 0, 0, 1, false, lines })
@@ -89,7 +88,7 @@ T["targeting valid action"]["adds action to Next Actions"] = function(action_lin
     child.lua("M.target_action()")
 
     -- Assert
-    local filename = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
+    local filename = child.lua_get("NEXT_ACTIONS_FILE")
     local bufnr = child.lua_get("vim.fn.bufadd('" .. filename .. "')")
     child.lua("vim.api.nvim_set_current_buf(...)", { bufnr })
     expect.reference_screenshot(child.get_screenshot())
@@ -216,8 +215,8 @@ T["targeting invalid action"]["does not add to Next Actions"] = function(action_
     child.lua("M.target_action()")
 
     -- Assert
-    local filename = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
-    local bufnr = child.lua_get("vim.fn.bufadd('" .. filename .. "')")
+    local next_actions_file = child.lua_get("NEXT_ACTIONS_FILE")
+    local bufnr = child.lua_get("vim.fn.bufadd('" .. next_actions_file .. "')")
     child.lua("vim.api.nvim_set_current_buf(...)", { bufnr })
     expect.reference_screenshot(child.get_screenshot())
 end
@@ -241,7 +240,7 @@ T["for inconsistently targetted actions"]["targeting adds target if missing and 
     child.o.lines, child.o.columns = 25, 80
     child.bo.readonly = false
     local lines = { "## Target Practice", "", action_line }
-    local next_actions_file = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
+    local next_actions_file = child.lua_get("NEXT_ACTIONS_FILE")
 
     -- Arrange
     child.lua("vim.api.nvim_buf_set_lines(...)", { 0, 0, 1, false, lines })
@@ -263,7 +262,7 @@ T["for inconsistently targetted actions"]["untargeting removes target if present
     child.o.lines, child.o.columns = 25, 80
     child.bo.readonly = false
     local lines = { "## Target Practice", "", action_line }
-    local next_actions_file = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
+    local next_actions_file = child.lua_get("NEXT_ACTIONS_FILE")
 
     -- Arrange
     child.lua("vim.api.nvim_buf_set_lines(...)", { 0, 0, 1, false, lines })
@@ -316,7 +315,7 @@ T["for targetted actions but some missing"]["toggling removes target and removes
     child.o.lines, child.o.columns = 25, 80
     child.bo.readonly = false
     local lines = { "## Target Practice", "", action_line }
-    local next_actions_file = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
+    local next_actions_file = child.lua_get("NEXT_ACTIONS_FILE")
 
     -- Arrange
     child.lua("vim.api.nvim_buf_set_lines(...)", { 0, 0, 1, false, lines })
@@ -345,7 +344,7 @@ T["for untargetted actions but some present"]["toggling adds target and adds to 
     child.o.lines, child.o.columns = 25, 80
     child.bo.readonly = false
     local lines = { "## Target Practice", "", action_line }
-    local next_actions_file = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
+    local next_actions_file = child.lua_get("NEXT_ACTIONS_FILE")
 
     -- Arrange
     child.lua("vim.api.nvim_buf_set_lines(...)", { 0, 0, 1, false, lines })

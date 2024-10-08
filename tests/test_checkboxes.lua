@@ -96,9 +96,8 @@ T["unchecking targeted project file action which is present in next actions unch
     local tag = "prchtapr"
     child.o.lines, child.o.columns = 25, 80
     child.bo.readonly = false
-    local next_actions_file = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
-    local example_project_file =
-        "/Users/tcrundall/Coding/GtdPlugin/tests/resources/projects/example.md"
+    local next_actions_file = child.lua_get("NEXT_ACTIONS_FILE")
+    local example_project_file = child.lua_get("EXAMPLE_PROJECT_FILE")
 
     -- Arrange
     local line_number = helpers.get_first_location_of_tag_in_file(example_project_file, tag)
@@ -121,9 +120,8 @@ T["unchecking next actions file action unchecks everywhere"] = function()
     local tag = "prchtapr"
     child.o.lines, child.o.columns = 25, 80
     child.bo.readonly = false
-    local next_actions_file = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
-    local example_project_file =
-        "/Users/tcrundall/Coding/GtdPlugin/tests/resources/projects/example.md"
+    local next_actions_file = child.lua_get("NEXT_ACTIONS_FILE")
+    local example_project_file = child.lua_get("EXAMPLE_PROJECT_FILE")
 
     -- Arrange
     local line_number = helpers.get_first_location_of_tag_in_file(next_actions_file, tag)
@@ -147,9 +145,8 @@ T["checking targeted project file action which is present in next actions checks
     local tag = "pruntapr"
     child.o.lines, child.o.columns = 25, 80
     child.bo.readonly = false
-    local next_actions_file = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
-    local example_project_file =
-        "/Users/tcrundall/Coding/GtdPlugin/tests/resources/projects/example.md"
+    local next_actions_file = child.lua_get("NEXT_ACTIONS_FILE")
+    local example_project_file = child.lua_get("EXAMPLE_PROJECT_FILE")
 
     -- Arrange
     local line_number = helpers.get_first_location_of_tag_in_file(example_project_file, tag)
@@ -172,9 +169,8 @@ T["checking next actions file action checks everywhere"] = function()
     local tag = "pruntapr"
     child.o.lines, child.o.columns = 25, 80
     child.bo.readonly = false
-    local next_actions_file = "/Users/tcrundall/Coding/GtdPlugin/tests/resources/next-actions.md"
-    local example_project_file =
-        "/Users/tcrundall/Coding/GtdPlugin/tests/resources/projects/example.md"
+    local next_actions_file = child.lua_get("NEXT_ACTIONS_FILE")
+    local example_project_file = child.lua_get("EXAMPLE_PROJECT_FILE")
 
     -- Arrange
     local line_number = helpers.get_first_location_of_tag_in_file(next_actions_file, tag)

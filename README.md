@@ -62,12 +62,12 @@ manually targeting actions in project files**
 
 ### Future features
 
-- [ ] feat: actually make it a plugin
-  - [ ] configure location of next-actions file
+- [x] feat: actually make it a plugin
+  - [x] configure location of next-actions file
 - [ ] feat: delete checked tasks
-- [ ] feat: connected actions
+- [x] feat: connected actions
 - [ ] feat: template a project file
-- [ ] feat: configure root directory
+- [x] feat: configure root directory
 - [ ] feat: add table methods
 - [ ] feat: include link following
   - [ ] jump to markdown headers in other files

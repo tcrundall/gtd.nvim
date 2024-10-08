@@ -17,7 +17,7 @@ T["initializing config works"] = function()
     -- arrange
     local user_opts = {
         notes_dir = "~/example-dir/",
-        next_actions_list_file = "~/example-dir/next-actions.md",
+        next_actions_file = "~/example-dir/next-actions.md",
     }
 
     -- act
@@ -25,7 +25,7 @@ T["initializing config works"] = function()
 
     -- assert
     eq(child.lua_get("M.opts.notes_dir"), user_opts.notes_dir)
-    eq(child.lua_get("M.opts.next_actions_list_file"), user_opts.next_actions_list_file)
+    eq(child.lua_get("M.opts.next_actions_file"), user_opts.next_actions_file)
 end
 
 T["setting up with empty opts yields defaults"] = function()
@@ -37,10 +37,13 @@ T["setting up with empty opts yields defaults"] = function()
 
     -- assert
     eq(child.lua_get("M.opts.notes_dir"), child.lua_get("M.default_opts.notes_dir"))
-    eq(
-        child.lua_get("M.opts.next_actions_list_file"),
-        child.lua_get("M.default_opts.next_actions_list_file")
-    )
+    eq(child.lua_get("M.opts.next_actions_file"), child.lua_get("M.default_opts.next_actions_file"))
+end
+
+T["minimal_init worked"] = function()
+    -- assert
+    eq(child.lua_get("M.opts.notes_dir"), "tests/resources/")
+    eq(child.lua_get("M.opts.next_actions_file"), "tests/resources/next-actions.md")
 end
 
 return T

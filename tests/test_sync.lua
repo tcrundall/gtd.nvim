@@ -88,5 +88,27 @@ T["adding to next actions"]["works"] = function(context)
     child.lua("vim.api.nvim_set_current_buf(...)", { bufnr })
     expect.reference_screenshot(child.get_screenshot())
 end
+T["adding to next actions"]["parent method works"] = function(context)
+    child.o.lines, child.o.columns = 45, 50
+    child.bo.readonly = false
+
+    -- Arrange
+    local tag = "[](syncnewt)"
+    local action_line = "- [ ] New action 1" .. " " .. tag
+    local lines = { "## " .. context, "", action_line }
+
+    -- Arrange
+    child.lua("vim.api.nvim_buf_set_lines(...)", { 0, 0, 1, false, lines })
+    child.lua("vim.fn.cursor(3, 0)")
+
+    -- Act
+    child.lua("M.add_to_next_actions(...)", { action_line, tag })
+
+    -- Assert
+    local next_actions_file = child.lua_get("NEXT_ACTIONS_FILE")
+    local bufnr = child.lua_get("vim.fn.bufadd('" .. next_actions_file .. "')")
+    child.lua("vim.api.nvim_set_current_buf(...)", { bufnr })
+    expect.reference_screenshot(child.get_screenshot())
+end
 
 return T
