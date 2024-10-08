@@ -38,7 +38,7 @@ M.untarget_action = function()
     local action_line = vim.api.nvim_get_current_line()
 
     if not helpers.is_action(action_line) then
-        return "Not an action!"
+        return nil
     end
 
     local tag
@@ -54,7 +54,7 @@ M.target_action = function()
     local action_line = vim.api.nvim_get_current_line()
 
     if not helpers.is_action(action_line) then
-        return "Not an action!"
+        return nil
     end
 
     local tag
@@ -70,7 +70,7 @@ M.toggle_target = function()
     local action_line = vim.api.nvim_get_current_line()
 
     if not helpers.is_action(action_line) then
-        return "Not an action!"
+        return nil
     end
 
     local tag

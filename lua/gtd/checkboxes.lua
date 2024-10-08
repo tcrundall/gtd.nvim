@@ -43,6 +43,7 @@ M.cycle_checkbox = function(tagged)
     local row_ix = vim.api.nvim_win_get_cursor(0)[1]
     local new_line = M.cycle_checkbox_format(vim.api.nvim_get_current_line(), tagged)
     vim.api.nvim_buf_set_lines(0, row_ix - 1, row_ix, false, { new_line })
+    vim.api.nvim_win_set_cursor(0, { row_ix, 999 })
 end
 
 return M

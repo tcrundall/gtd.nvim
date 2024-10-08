@@ -22,24 +22,30 @@ M.target_action = target.target_action
 M.untarget_action = target.untarget_action
 M.toggle_action = target.toggle_target
 
-vim.api.nvim_create_user_command("CycleCheckbox", function(opts)
+vim.api.nvim_create_user_command("GtdCycleCheckbox", function(opts)
     local bool_val = opts.fargs[1] == "true"
     M.cycle_checkbox(bool_val)
 end, { nargs = "?" })
 
 vim.api.nvim_create_user_command("GtdTargetAction", function()
-    M.target_action()
-    helpers.write_all_files()
+    local res = M.target_action()
+    if res ~= nil then
+        helpers.write_all_files()
+    end
 end, {})
 
 vim.api.nvim_create_user_command("GtdUntargetAction", function()
-    M.untarget_action()
-    helpers.write_all_files()
+    local res = M.untarget_action()
+    if res ~= nil then
+        helpers.write_all_files()
+    end
 end, {})
 
 vim.api.nvim_create_user_command("GtdToggleTargetAction", function()
-    M.toggle_action()
-    helpers.write_all_files()
+    local res = M.toggle_action()
+    if res ~= nil then
+        helpers.write_all_files()
+    end
 end, {})
 
 return M
