@@ -20,7 +20,8 @@ A plugin that facilitates utilizing the Getting Things Done framework in Neovim.
   - [x] dedicated tag method
   - [x] don't add tags if already present
   - [x] remove requirement of argument for cycle tag
-- [x] checking action in Next Actions list completes in project [](asdf)
+- [ ] checking action in Next Actions list completes in project
+  - [ ] checking action gracefully handles missing tag
 - [x] checking action in project completes in Next Actions list
 - [x] dedicated "gtd" action for "checking"
 - [ ] some way to sync: while scraping, if action checked anywhere, check everywhere
@@ -45,6 +46,15 @@ A plugin that facilitates utilizing the Getting Things Done framework in Neovim.
       - [x] Test that untargeting removes from NextActions file
     - [x] Don't include target in NextActions file
     - [x] Write next-actions file after additions
+
+### Add dependencies / waiting for
+
+Have some way to chain dependencies between tasks, i.e. list a action as
+"blocked" by another action (by tag), such that when the blocking action is
+checked, the now unblocked action becomes targeted
+
+Consider if there's a way to elegantly handle "waiting fors"
+  - have a "check up" date/time on each waiting for
 
 ### Scraping actions (low-prio)
 
@@ -71,6 +81,7 @@ manually targeting actions in project files**
 - [ ] feat: add table methods
 - [ ] feat: include link following
   - [ ] jump to markdown headers in other files
+  - [ ] jump to other reference of tag
 
 ## Supporting Material
 
