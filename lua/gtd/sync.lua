@@ -36,7 +36,7 @@ end
 ---@param tag string
 M.remove_from_next_actions = function(tag)
     if not helpers.is_tag_in_file(config.opts.next_actions_file, tag) then
-        print("Action was not in ", config.opts.next_actions_file, ". Out of sync?")
+        print(string.format("Action was not in %s... Out of sync?", config.opts.next_actions_file))
     else
         local line_number =
             helpers.get_first_location_of_tag_in_file(config.opts.next_actions_file, tag)
@@ -52,9 +52,8 @@ end
 ---@param action_line string
 ---@param tag string
 M.add_to_next_actions = function(action_line, tag)
-    -- MiniTest.expect.equality(config.opts.next_actions_file, "sync-check")
     if helpers.is_tag_in_file(config.opts.next_actions_file, tag) then
-        print("Action is already in ", config.opts.next_actions_file, ". Out of sync?")
+        print(string.format("Action is already in %s. Out of sync?", config.opts.next_actions_file))
     else
         local line_number = vim.fn.line(".")
         line_number = line_number - 1
@@ -140,32 +139,24 @@ M.scrape_actions = function()
     local heading_prefix = ("#"):rep(heading_level + 1) .. " "
     for row_offset, row in ipairs(tasks_block) do
         if vim.startswith(row, heading_prefix) then
-            print("Found a context: ", row)
             local context = row:sub(heading_level + 3)
-            print(context)
 
             contexts =
                 vim.tbl_extend("error", contexts, { [context] = row_offset + organize_row_ix - 1 })
         end
     end
-    print(contexts["Another context"])
-    print(contexts["Packing list"])
 
     for context, row_ix in pairs(contexts) do
-        print("In context ", context)
         local target_row_ix = row_ix + 1
-        -- print("Looking at ", contents[target_row_ix])
         while
             contents[target_row_ix] ~= nil
             and not helpers.is_action(contents[target_row_ix])
             and not M.is_subheading(contents[target_row_ix], heading_level)
         do
             target_row_ix = target_row_ix + 1
-            -- print("Looking at ", contents[target_row_ix])
         end
         local row = contents[target_row_ix]
         if row ~= nil and helpers.is_action(row) then
-            print("Found next action:", row)
             M.insert_action_into_next_actions(context, row, config.opts.next_actions_file)
         end
     end

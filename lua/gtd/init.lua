@@ -8,11 +8,9 @@
 -- package.loaded["gtd.config"] = nil
 --
 
-print("requiring all submodules")
 local checkboxes = require("gtd.checkboxes")
 local sync = require("gtd.sync")
 local target = require("gtd.target")
-local helpers = require("gtd.helpers")
 local config = require("gtd.config")
 
 local M = {}
@@ -35,38 +33,26 @@ end, { nargs = "?" })
 
 vim.api.nvim_create_user_command("GtdCheckAction", function()
     M.check_action()
-    helpers.write_all_files()
 end, {})
 
 vim.api.nvim_create_user_command("GtdUncheckAction", function()
     M.uncheck_action()
-    helpers.write_all_files()
 end, {})
 
 vim.api.nvim_create_user_command("GtdToggleCheck", function()
     M.toggle_check()
-    helpers.write_all_files()
 end, {})
 
 vim.api.nvim_create_user_command("GtdTargetAction", function()
-    local res = M.target_action()
-    if res ~= nil then
-        helpers.write_all_files()
-    end
+    M.target_action()
 end, {})
 
 vim.api.nvim_create_user_command("GtdUntargetAction", function()
-    local res = M.untarget_action()
-    if res ~= nil then
-        helpers.write_all_files()
-    end
+    M.untarget_action()
 end, {})
 
 vim.api.nvim_create_user_command("GtdToggleTargetAction", function()
-    local res = M.toggle_action()
-    if res ~= nil then
-        helpers.write_all_files()
-    end
+    M.toggle_action()
 end, {})
 
 return M
