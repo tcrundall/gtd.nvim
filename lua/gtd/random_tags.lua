@@ -51,19 +51,13 @@ M.ensure_tagged = function(line)
 
     if start_ix == nil or end_ix == nil then
         tag = M.generate_random_tag()
-        -- return nil
         return string.format("%s [](%s)", line, tag), tag
     end
 
     tag = line:sub(start_ix, end_ix)
-
-    if end_ix ~= #line then
-        print("Warning: apparent tag is not at end of line")
-    end
     return line, tag
 end
 
----comment
 ---@param line string
 M.get_tag = function(line)
     local tag_pattern = "%[%]%([%a%d]+%)"

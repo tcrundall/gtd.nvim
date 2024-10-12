@@ -8,6 +8,7 @@ local T = new_set({
         pre_case = function()
             child.restart({ "-u", "scripts/minimal_init.lua" })
             child.lua([[M = require('gtd.config')]])
+            child.lua([[M.is_initialized = false]])
         end,
         post_once = child.stop,
     },
