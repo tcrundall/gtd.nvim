@@ -10,6 +10,15 @@ A plugin that facilitates utilizing the Getting Things Done framework in Neovim.
 * Linking blocked actions to their blocker
 * Auto-unblocking blocked actions upon completion of their blocker
 
+## Testing
+
+Requirements:
+- MiniTest plugin is installed and initialised
+- In a lua file, execute:
+  - `:lua MiniTest.run()` to run all [T]ests
+  - `:lua MiniTest.run_file()` to run current [F]ile
+  - `:lua MiniTest.run_at_location()` to run [C]urrent test
+
 ## Brainstorm
 
 ## Organize
