@@ -148,14 +148,18 @@ M.get_all_locations_of_tag = function(tag)
 
     local tag_locations = {}
     for _, result in ipairs(vim.fn.split(results_without_command, "\n")) do
-        -- TODO: Reject results that don't match expected pattern
-        -- otherwise output from e.g. ~/.bash_profile will break things
         result = vim.fn.split(result, ":")
+        -- Skip results that don't match expected pattern
+        -- TODO: Make expected pattern stricter
+        if result[2] == nil then
+            goto continue
+        end
         local location = {
             filename = result[1],
             line_number = tonumber(result[2]),
         }
         table.insert(tag_locations, location)
+        ::continue::
     end
     return tag_locations
 end
